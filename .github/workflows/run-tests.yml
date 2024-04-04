@@ -40,5 +40,8 @@ jobs:
       - name: Restore Test Examples Dependencies
         run: dotnet restore docs/examples/test/Bonsai.ML.Examples.sln --configfile NuGet.config
 
+      - name: Install Bonsai Templates
+        run: dotnet new install Bonsai.Templates::2.8.1
+
       - name: Run Tests
         run: dotnet test docs/examples/test/Bonsai.ML.Examples.sln
