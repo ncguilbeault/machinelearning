@@ -19,9 +19,9 @@ jobs:
           dotnet-version: 8.x
 
       - name: Setup Python 3.10
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.10
+          python-version: "3.10"
 
       - name: Restore Bonsai.ML Dependencies
         run: dotnet restore src/Bonsai.ML.sln
@@ -30,7 +30,7 @@ jobs:
         run: dotnet build src/Bonsai.ML.sln
 
       - name: Restore Test Examples Dependencies
-        run: dotnet restore docs/examples/test/Bonsai.ML.Examples.sln --configfile docs/examples/test/Bonsai.ML.Examples/NuGet.config
+        run: dotnet restore docs/examples/test/Bonsai.ML.Examples.sln --configfile docs/examples/test/Bonsai.ML.Examples.Tests/NuGet.config
 
       - name: Run Tests
         run: dotnet test docs/examples/test/Bonsai.ML.Examples.sln
