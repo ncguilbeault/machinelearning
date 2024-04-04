@@ -30,7 +30,7 @@ jobs:
         run: dotnet build src/Bonsai.ML.sln
 
       - name: Restore Test Examples Dependencies
-        run: dotnet restore docs/examples/test/Bonsai.ML.Examples.sln --configfile docs/examples/test/Bonsai.ML.Examples.Tests/NuGet.config
+        run: dotnet restore docs/examples/test/Bonsai.ML.Examples.sln --configfile NuGet.config
 
       - name: Run Tests
         run: dotnet test docs/examples/test/Bonsai.ML.Examples.sln
