@@ -23,11 +23,14 @@ jobs:
         with:
           python-version: "3.10"
 
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
       - name: Restore Bonsai.ML Dependencies
-        run: dotnet restore src/Bonsai.ML.sln
+        run: msbuild -t:restore src/Bonsai.ML.sln
   
-      - name: Build Bonsai.ML
-        run: dotnet build src/Bonsai.ML.sln
+      - name: Build and Pack Bonsai.ML
+        run: dotnet build src/Bonsai.ML.sln --configuration Debug
 
       - name: Restore Test Examples Dependencies
         run: dotnet restore docs/examples/test/Bonsai.ML.Examples.sln --configfile NuGet.config
