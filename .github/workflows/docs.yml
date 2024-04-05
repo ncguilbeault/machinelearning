@@ -20,6 +20,10 @@ jobs:
 
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
+
+      - name: Move NuGet Config
+        run: Move-Item -Path NuGet.config -Destination NuGet.config.tmp
+        shell: powershell
         
       - name: Restore NuGet Packages
         run: msbuild -t:restore src/Bonsai.ML.sln
