@@ -2,6 +2,9 @@
 name: Test Examples
 
 on:
+  push:
+    branches:
+      - 'docs-dev'
   workflow_dispatch:
 
 jobs:
