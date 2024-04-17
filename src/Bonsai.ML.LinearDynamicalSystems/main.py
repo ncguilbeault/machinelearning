@@ -56,7 +56,7 @@ class KalmanFilterKinematics(OnlineKalmanFilter):
                         [0, 0, 0, 1, 0, 0]],
 
                       dtype=np.double)
-        Qt = np.array([ [dt**4/4,   dt**3/2,    dt**2/2,    0,          0,          0],
+        self.Qe = np.array([ [dt**4/4,   dt**3/2,    dt**2/2,    0,          0,          0],
                         [dt**3/2,   dt**2,      dt,         0,          0,          0],
                         [dt**2/2,   dt,         1,          0,          0,          0],
                         [0,         0,          0,          dt**4/4,    dt**3/2,    dt**2/2],
@@ -67,7 +67,7 @@ class KalmanFilterKinematics(OnlineKalmanFilter):
         R = np.diag([self.sigma_x**2, self.sigma_y**2]).astype(np.double)
         m0 = np.array([[self.pos_x0, self.vel_x0, self.acc_x0, self.pos_y0, self.vel_y0, self.acc_y0]], dtype=np.double).T
         V0 = np.diag(np.ones(len(m0))*self.sqrt_diag_V0_value**2).astype(np.double)
-        Q = Qt * self.sigma_a
+        Q = self.Qe * self.sigma_a
 
         self.batch = None
         self.is_running = False
@@ -87,9 +87,9 @@ class KalmanFilterKinematics(OnlineKalmanFilter):
         return super().update(y=np.array([x, y]))
     
     def optimize(self, vars_to_estimate):
-        sqrt_diag_R = np.sqrt(self.R.astype(np.double).copy())
+        sqrt_diag_R = np.array([self.sigma_x, self.sigma_y])
         m0 = self.m0.squeeze().copy()
-        sqrt_diag_V0 = (np.ones(len(self.m0))*self.sqrt_diag_V0_value).astype(np.double)
+        sqrt_diag_V0 = (np.ones(len(self.m0))*self.sqrt_diag_V0_value)
 
         y = self.batch.T.astype(np.double).copy()
         B = self.B.astype(np.double).copy()
@@ -176,12 +176,12 @@ class KalmanFilterKinematics(OnlineKalmanFilter):
 
                 if vars_to_estimate is None:
                     vars_to_estimate = { 
-                        "sigma_a": False, 
-                        "sqrt_diag_R": False, 
-                        "R" : False, 
-                        "m0" : False, 
-                        "sqrt_diag_V0": False, 
-                        "V0" : False 
+                        "sigma_a": True, 
+                        "sqrt_diag_R": True, 
+                        "R" : True, 
+                        "m0" : True, 
+                        "sqrt_diag_V0": True, 
+                        "V0" : True 
                     }
 
                 if self.loop is None or self.loop.is_closed():
@@ -189,7 +189,6 @@ class KalmanFilterKinematics(OnlineKalmanFilter):
 
                 if self.thread is None:
                     self.thread = threading.Thread(target = start_loop, args = (self.loop,))
-                    self.thread.daemon = True
                     self.thread.start()
 
                 future = asyncio.run_coroutine_threadsafe(self._run_optimization_async(vars_to_estimate = vars_to_estimate), self.loop)
