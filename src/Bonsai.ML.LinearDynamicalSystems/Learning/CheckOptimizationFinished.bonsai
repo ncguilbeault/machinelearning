@@ -18,7 +18,7 @@
         <Property Name="Name" DisplayName="Name" Category="ModelReference" />
       </Expression>
       <Expression xsi:type="SubscribeSubject" TypeArguments="p1:ModelReference">
-        <Name>model1</Name>
+        <Name>model</Name>
       </Expression>
       <Expression xsi:type="MemberSelector">
         <Selector>Name</Selector>
@@ -66,7 +66,7 @@
         </Workflow>
       </Expression>
       <Expression xsi:type="SubscribeSubject" TypeArguments="p1:ModelReference">
-        <Name>model1</Name>
+        <Name>model</Name>
       </Expression>
       <Expression xsi:type="MemberSelector">
         <Selector>Name</Selector>
