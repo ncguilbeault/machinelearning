@@ -86,7 +86,7 @@ class KalmanFilterKinematics(OnlineKalmanFilter):
 
         return super().update(y=np.array([x, y]))
     
-    def optimize(self, vars_to_estimate):
+    def optimize(self, vars_to_estimate, max_iter, disp):
         sqrt_diag_R = np.array([self.sigma_x, self.sigma_y])
         m0 = self.m0.squeeze().copy()
         sqrt_diag_V0 = (np.ones(len(self.m0))*self.sqrt_diag_V0_value)
@@ -98,7 +98,7 @@ class KalmanFilterKinematics(OnlineKalmanFilter):
 
         sigma_ax0 = sigma_ay0 = np.sqrt(self.sigma_a)
 
-        optim_res_ga = lds.learning.scipy_optimize_SS_tracking_diagV0(y=y, B=B, sigma_ax0=sigma_ax0, sigma_ay0=sigma_ay0, Qe=Qe, Z=Z, sqrt_diag_R_0=sqrt_diag_R, m0_0=m0, sqrt_diag_V0_0=sqrt_diag_V0)
+        optim_res_ga = lds.learning.scipy_optimize_SS_tracking_diagV0(y=y, B=B, sigma_ax0=sigma_ax0, sigma_ay0=sigma_ay0, Qe=Qe, Z=Z, sqrt_diag_R_0=sqrt_diag_R, m0_0=m0, sqrt_diag_V0_0=sqrt_diag_V0, max_iter=max_iter, disp=disp)
 
         if vars_to_estimate["sigma_a"]:
             self.sigma_a = optim_res_ga["x"]["sigma_ax"].item() ** 2
@@ -120,7 +120,9 @@ class KalmanFilterKinematics(OnlineKalmanFilter):
                             x, 
                             y,
                             vars_to_estimate = None, 
-                            batch_size = 20):
+                            batch_size = 20,
+                            max_iter = 50,
+                            disp = True):
 
         if self.batch is None:
             self.batch = np.array([[x, y]])
@@ -140,7 +142,7 @@ class KalmanFilterKinematics(OnlineKalmanFilter):
                     "V0" : True 
                 }
 
-            self.optimize(vars_to_estimate)
+            self.optimize(vars_to_estimate, max_iter, disp)
             self.batch = None
 
             return True
@@ -151,7 +153,9 @@ class KalmanFilterKinematics(OnlineKalmanFilter):
                                 x, 
                                 y,
                                 vars_to_estimate = None, 
-                                batch_size = 20):
+                                batch_size = 20,
+                                max_iter = 50,
+                                disp = True):
 
         if not self.is_running:
 
@@ -191,7 +195,7 @@ class KalmanFilterKinematics(OnlineKalmanFilter):
                     self.thread = threading.Thread(target = start_loop, args = (self.loop,))
                     self.thread.start()
 
-                future = asyncio.run_coroutine_threadsafe(self._run_optimization_async(vars_to_estimate = vars_to_estimate), self.loop)
+                future = asyncio.run_coroutine_threadsafe(self._run_optimization_async(vars_to_estimate, max_iter, disp), self.loop)
                 future.add_done_callback(on_completion)
 
         return self.is_running
