@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Reflection;
@@ -11,19 +11,22 @@ using System.Drawing;
 using System.Reactive;
 using OxyPlot.Series;
 
-[assembly: TypeVisualizer(typeof(KinematicComponentVisualizer), Target = typeof(KinematicComponent))]
+[assembly: TypeVisualizer(typeof(KinematicStateVisualizer), Target = typeof(KinematicState))]
 
 namespace Bonsai.ML.Visualizers
 {
     /// <summary>
     /// Provides a type visualizer to display the state components of a Kalman Filter kinematics model.
     /// </summary>
-    public class KinematicComponentVisualizer : BufferedVisualizer
+    public class KinematicStateVisualizer : BufferedVisualizer
     {
-
         private PropertyInfo stateComponentProperty;
 
-        private int selectedIndex = 0;
+        private PropertyInfo kinematicComponentProperty;
+
+        private int selectedStateIndex = 0;
+
+        private int selectedKinematicIndex = 0;
 
         private DateTime? _startTime;
 
@@ -36,7 +39,12 @@ namespace Bonsai.ML.Visualizers
         /// <summary>
         /// The selected index of the state component to be visualized
         /// </summary>
-        public int SelectedIndex { get => selectedIndex; set => selectedIndex = value; }
+        public int SelectedStateIndex { get => selectedStateIndex; set => selectedStateIndex = value; }
+
+        /// <summary>
+        /// The selected index of the kinematic component to be visualized
+        /// </summary>
+        public int SelectedKinematicIndex { get => selectedKinematicIndex; set => selectedKinematicIndex = value; }
 
         /// <summary>
         /// Size of the window when loaded
@@ -66,7 +74,8 @@ namespace Bonsai.ML.Visualizers
             Plot.ResetAreaSeries(areaSeries);
             Plot.ResetAxes();
 
-            Plot.AddComboBoxWithLabel("State component:", LinearDynamicalSystemsHelper.GetStateComponents(), selectedIndex, ComponentChanged);
+            Plot.AddComboBoxWithLabel("State component:", LinearDynamicalSystemsHelper.GetStateComponents(), selectedStateIndex, StateComponentChanged);
+            Plot.AddComboBoxWithLabel("Kinematic component:", LinearDynamicalSystemsHelper.GetKinematicComponents(), selectedKinematicIndex, KinematicComponentChanged);
 
             var visualizerService = (IDialogTypeVisualizerService)provider.GetService(typeof(IDialogTypeVisualizerService));
             if (visualizerService != null)
@@ -88,11 +97,13 @@ namespace Bonsai.ML.Visualizers
                 _startTime = time;
                 Plot.StartTime = _startTime.Value;
                 // Plot.ResetSeries();
-
+                Plot.ResetAxes();
             }
 
-            KinematicComponent kinematicComponent = (KinematicComponent)value;
+            KinematicState kinematicState = (KinematicState)value;
+            KinematicComponent kinematicComponent = (KinematicComponent)kinematicComponentProperty.GetValue(kinematicState);
             StateComponent stateComponent = (StateComponent)stateComponentProperty.GetValue(kinematicComponent);
+
             double mean = stateComponent.Mean;
             double variance = stateComponent.Variance;
 
@@ -134,16 +145,34 @@ namespace Bonsai.ML.Visualizers
         }
 
         /// <summary>
-        /// Callback function to update the visualizer when the selected component has changed
+        /// Callback function to update the visualizer when the selected state component has changed
         /// </summary>
-        private void ComponentChanged(object sender, EventArgs e)
+        private void StateComponentChanged(object sender, EventArgs e)
         {
             ToolStripComboBox comboBox = sender as ToolStripComboBox;
-            selectedIndex = comboBox.SelectedIndex;
+            selectedStateIndex = comboBox.SelectedIndex;
             var selectedName = comboBox.SelectedItem.ToString();
             stateComponentProperty = typeof(KinematicComponent).GetProperty(selectedName);
             _startTime = null;
 
+            Plot.ResetLineSeries(lineSeries);
+            Plot.ResetAreaSeries(areaSeries);
+            Plot.ResetAxes();
+        }
+
+        /// <summary>
+        /// Callback function to update the visualizer when the selected kinematic component has changed
+        /// </summary>
+        private void KinematicComponentChanged(object sender, EventArgs e)
+        {
+            ToolStripComboBox comboBox = sender as ToolStripComboBox;
+            selectedKinematicIndex = comboBox.SelectedIndex;
+            var selectedName = comboBox.SelectedItem.ToString();
+            kinematicComponentProperty = typeof(KinematicState).GetProperty(selectedName);
+            _startTime = null;
+
+            Plot.ResetLineSeries(lineSeries);
+            Plot.ResetAreaSeries(areaSeries);
             Plot.ResetAxes();
         }
     }

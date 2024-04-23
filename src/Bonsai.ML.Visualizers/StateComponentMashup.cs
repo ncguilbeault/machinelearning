@@ -1,51 +1,44 @@
-﻿using System;
-using System.Windows.Forms;
-using System.Collections.Generic;
-using Bonsai;
 using Bonsai.Design;
-using Bonsai.ML.Visualizers;
+using Bonsai;
 using Bonsai.ML.LinearDynamicalSystems;
-using System.Drawing;
-using System.Reactive;
+using Bonsai.ML.Visualizers;
+using System.Collections.Generic;
+using System;
+using System.Windows.Forms;
+using System.Xml.Serialization;
+using System.Reactive.Linq;
 using OxyPlot.Series;
+using System.Reactive;
+using System.Threading;
+using System.Linq;
 
-[assembly: TypeVisualizer(typeof(StateComponentVisualizer), Target = typeof(StateComponent))]
+[assembly: TypeVisualizer(typeof(StateComponentMashup), Target = typeof(StateComponent))]
 
 namespace Bonsai.ML.Visualizers
 {
-    /// <summary>
-    /// Provides a type visualizer to display the state components of a Kalman Filter kinematics model.
-    /// </summary>
-    public class StateComponentVisualizer : BufferedVisualizer
+    public class StateComponentMashup : MashupVisualizer
     {
-
         private DateTime? _startTime;
-
-        private TimeSeriesOxyPlotBase Plot;
+        private TimeSpan updateFrequency = TimeSpan.FromSeconds(1/30);
+        private DateTime? lastUpdate = null;
 
         private LineSeries lineSeries;
 
         private AreaSeries areaSeries;
 
-        /// <summary>
-        /// Size of the window when loaded
-        /// </summary>
-        public Size Size { get; set; } = new Size(320, 240);
+        [XmlIgnore()]
+        public TimeSeriesOxyPlotBase Plot { get; private set; }
 
-        /// <summary>
-        /// Capacity or length of time shown along the x axis of the plot during automatic updating
-        /// </summary>
-        public int Capacity { get; set; } = 10;
+        private int Capacity = 10;     
 
         /// <inheritdoc/>
         public override void Load(IServiceProvider provider)
         {
             Plot = new TimeSeriesOxyPlotBase()
             {
-                Size = Size,
-                Capacity = Capacity,
                 Dock = DockStyle.Fill,
-                StartTime = DateTime.Now
+                StartTime = DateTime.Now,
+                Capacity = Capacity
             };
 
             lineSeries = Plot.AddNewLineSeries("Mean");
@@ -60,21 +53,20 @@ namespace Bonsai.ML.Visualizers
             {
                 visualizerService.AddControl(Plot);
             }
+            _startTime = null;
+
+            base.Load(provider);
         }
+
 
         /// <inheritdoc/>
         public override void Show(object value)
         {
-        }
-
-        /// <inheritdoc/>
-        protected override void Show(DateTime time, object value)
-        {
+            var time = DateTime.Now;
             if (!_startTime.HasValue)
             {
                 _startTime = time;
                 Plot.StartTime = _startTime.Value;
-                // Plot.ResetSeries();
                 Plot.ResetAxes();
             }
 
@@ -95,18 +87,29 @@ namespace Bonsai.ML.Visualizers
                 variance: variance
             );
 
-            Plot.SetAxes(minTime: time.AddSeconds(-Capacity), maxTime: time);
+            if (MashupSources.Count == 0) Plot.SetAxes(minTime: time.AddSeconds(-Capacity), maxTime: time);
 
+            if (lastUpdate is null || time - lastUpdate > updateFrequency)
+            {
+                lastUpdate = time;
+                Plot.UpdatePlot();
+            }
         }
 
         /// <inheritdoc/>
-        protected override void ShowBuffer(IList<Timestamped<object>> values)
+        public override IObservable<object> Visualize(IObservable<IObservable<object>> source, IServiceProvider provider)
         {
-            base.ShowBuffer(values);
-            if (values.Count > 0)
-            {
-                Plot.UpdatePlot();
-            }
+            var mashupSourceStreams = MashupSources.Select(mashupSource =>
+                mashupSource.Visualizer.Visualize(mashupSource.Source.Output, provider)
+                    .Do(value => mashupSource.Visualizer.Show(value)));
+
+            var mergedMashupSources = Observable.Merge(mashupSourceStreams);
+
+            var processedSource = source
+                .SelectMany(innerSource => innerSource)
+                .Do(value => Show(value));
+
+            return Observable.Merge(mergedMashupSources, processedSource);
         }
 
         /// <inheritdoc/>
