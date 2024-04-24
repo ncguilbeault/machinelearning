@@ -9,6 +9,7 @@ using Bonsai.ML.LinearDynamicalSystems;
 using Bonsai.ML.LinearDynamicalSystems.Kinematics;
 using System.Drawing;
 using System.Reactive;
+using OxyPlot.Series;
 
 [assembly: TypeVisualizer(typeof(KinematicComponentVisualizer), Target = typeof(KinematicComponent))]
 
@@ -28,6 +29,10 @@ namespace Bonsai.ML.Visualizers
 
         private TimeSeriesOxyPlotBase Plot;
 
+        private LineSeries lineSeries;
+
+        private AreaSeries areaSeries;
+
         /// <summary>
         /// The selected index of the state component to be visualized
         /// </summary>
@@ -46,15 +51,7 @@ namespace Bonsai.ML.Visualizers
         /// <inheritdoc/>
         public override void Load(IServiceProvider provider)
         {
-            var stateComponents = GetStateComponents();
-            stateComponentProperty = typeof(KinematicComponent).GetProperty(stateComponents[selectedIndex]);
-
-            Plot = new TimeSeriesOxyPlotBase(
-                lineSeriesName: "Mean",
-                areaSeriesName: "Variance",
-                dataSource: stateComponents,
-                selectedIndex: selectedIndex
-            )
+            Plot = new TimeSeriesOxyPlotBase()
             {
                 Size = Size,
                 Capacity = Capacity,
@@ -62,9 +59,14 @@ namespace Bonsai.ML.Visualizers
                 StartTime = DateTime.Now
             };
 
-            Plot.ResetSeries();
+            lineSeries = Plot.AddNewLineSeries("Mean");
+            areaSeries = Plot.AddNewAreaSeries("Variance");
 
-            Plot.ComboBoxValueChanged += ComponentChanged;
+            Plot.ResetLineSeries(lineSeries);
+            Plot.ResetAreaSeries(areaSeries);
+            Plot.ResetAxes();
+
+            Plot.AddComboBoxWithLabel("State component:", LinearDynamicalSystemsHelper.GetStateComponents(), selectedIndex, ComponentChanged);
 
             var visualizerService = (IDialogTypeVisualizerService)provider.GetService(typeof(IDialogTypeVisualizerService));
             if (visualizerService != null)
@@ -85,7 +87,8 @@ namespace Bonsai.ML.Visualizers
             {
                 _startTime = time;
                 Plot.StartTime = _startTime.Value;
-                Plot.ResetSeries();
+                // Plot.ResetSeries();
+
             }
 
             KinematicComponent kinematicComponent = (KinematicComponent)value;
@@ -94,11 +97,13 @@ namespace Bonsai.ML.Visualizers
             double variance = stateComponent.Variance;
 
             Plot.AddToLineSeries(
+                lineSeries: lineSeries,
                 time: time,
                 mean: mean
             );
 
             Plot.AddToAreaSeries(
+                areaSeries: areaSeries,
                 time: time,
                 mean: mean,
                 variance: variance
@@ -118,24 +123,6 @@ namespace Bonsai.ML.Visualizers
             }
         }
 
-        /// <summary>
-        /// Gets the names of the state components defined in the kinematic component class
-        /// </summary>
-        private List<string> GetStateComponents()
-        {
-            List<string> stateComponents = new List<string>();
-
-            foreach (PropertyInfo property in typeof(KinematicComponent).GetProperties())
-            {
-                if (property.PropertyType == typeof(StateComponent))
-                {
-                    stateComponents.Add(property.Name);
-                }
-            }
-
-            return stateComponents;
-        }
-
         /// <inheritdoc/>
         public override void Unload()
         {
@@ -151,13 +138,13 @@ namespace Bonsai.ML.Visualizers
         /// </summary>
         private void ComponentChanged(object sender, EventArgs e)
         {
-            var comboBox = Plot.ComboBox;
+            ToolStripComboBox comboBox = sender as ToolStripComboBox;
             selectedIndex = comboBox.SelectedIndex;
             var selectedName = comboBox.SelectedItem.ToString();
             stateComponentProperty = typeof(KinematicComponent).GetProperty(selectedName);
             _startTime = null;
 
-            Plot.ResetSeries();
+            Plot.ResetAxes();
         }
     }
 }
