@@ -1,40 +1,46 @@
-using System;
-using System.Windows.Forms;
-using System.Collections.Generic;
-using System.Reflection;
-using Bonsai;
 using Bonsai.Design;
-using Bonsai.ML.Visualizers;
+using Bonsai;
 using Bonsai.ML.LinearDynamicalSystems;
 using Bonsai.ML.LinearDynamicalSystems.Kinematics;
-using System.Drawing;
-using System.Reactive;
+using Bonsai.ML.Visualizers;
+using System.Collections.Generic;
+using System;
+using System.Windows.Forms;
+using System.Xml.Serialization;
+using System.Reactive.Linq;
 using OxyPlot.Series;
+using System.Reactive;
+using System.Threading;
+using System.Linq;
+using System.Drawing;
+using System.Reflection;
 
 [assembly: TypeVisualizer(typeof(KinematicStateVisualizer), Target = typeof(KinematicState))]
 
 namespace Bonsai.ML.Visualizers
 {
-    /// <summary>
-    /// Provides a type visualizer to display the state components of a Kalman Filter kinematics model.
-    /// </summary>
-    public class KinematicStateVisualizer : BufferedVisualizer
+    public class KinematicStateVisualizer : MashupVisualizer
     {
-        private PropertyInfo stateComponentProperty;
+        [XmlIgnore()]
+        public PropertyInfo stateComponentProperty { get; private set; }
 
-        private PropertyInfo kinematicComponentProperty;
+        [XmlIgnore()]
+        public PropertyInfo kinematicComponentProperty { get; private set; }
 
         private int selectedStateIndex = 0;
 
         private int selectedKinematicIndex = 0;
 
         private DateTime? _startTime;
-
-        private TimeSeriesOxyPlotBase Plot;
+        private TimeSpan updateFrequency = TimeSpan.FromSeconds(1/30);
+        private DateTime? lastUpdate = null;
 
         private LineSeries lineSeries;
 
         private AreaSeries areaSeries;
+
+        [XmlIgnore()]
+        public TimeSeriesOxyPlotBase Plot { get; private set; }
 
         /// <summary>
         /// The selected index of the state component to be visualized
@@ -61,10 +67,9 @@ namespace Bonsai.ML.Visualizers
         {
             Plot = new TimeSeriesOxyPlotBase()
             {
-                Size = Size,
-                Capacity = Capacity,
                 Dock = DockStyle.Fill,
-                StartTime = DateTime.Now
+                StartTime = DateTime.Now,
+                Capacity = Capacity
             };
 
             lineSeries = Plot.AddNewLineSeries("Mean");
@@ -74,29 +79,34 @@ namespace Bonsai.ML.Visualizers
             Plot.ResetAreaSeries(areaSeries);
             Plot.ResetAxes();
 
-            Plot.AddComboBoxWithLabel("State component:", LinearDynamicalSystemsHelper.GetStateComponents(), selectedStateIndex, StateComponentChanged);
-            Plot.AddComboBoxWithLabel("Kinematic component:", LinearDynamicalSystemsHelper.GetKinematicComponents(), selectedKinematicIndex, KinematicComponentChanged);
+            List<string> stateComponents = LinearDynamicalSystemsHelper.GetStateComponents();
+            List<string> kinematicComponents = LinearDynamicalSystemsHelper.GetKinematicComponents();
+
+            Plot.AddComboBoxWithLabel("State component:", stateComponents, selectedStateIndex, StateComponentChanged);
+            Plot.AddComboBoxWithLabel("Kinematic component:", kinematicComponents, selectedKinematicIndex, KinematicComponentChanged);
+
+            stateComponentProperty = typeof(KinematicComponent).GetProperty(stateComponents[selectedStateIndex]);
+            kinematicComponentProperty = typeof(KinematicState).GetProperty(kinematicComponents[selectedKinematicIndex]);
 
             var visualizerService = (IDialogTypeVisualizerService)provider.GetService(typeof(IDialogTypeVisualizerService));
             if (visualizerService != null)
             {
                 visualizerService.AddControl(Plot);
             }
+            _startTime = null;
+
+            base.Load(provider);
         }
+
 
         /// <inheritdoc/>
         public override void Show(object value)
         {
-        }
-
-        /// <inheritdoc/>
-        protected override void Show(DateTime time, object value)
-        {
+            var time = DateTime.Now;
             if (!_startTime.HasValue)
             {
                 _startTime = time;
                 Plot.StartTime = _startTime.Value;
-                // Plot.ResetSeries();
                 Plot.ResetAxes();
             }
 
@@ -120,18 +130,27 @@ namespace Bonsai.ML.Visualizers
                 variance: variance
             );
 
-            Plot.SetAxes(minTime: time.AddSeconds(-Capacity), maxTime: time);
+            if (MashupSources.Count == 0) Plot.SetAxes(minTime: time.AddSeconds(-Capacity), maxTime: time);
 
+            if (lastUpdate is null || time - lastUpdate > updateFrequency)
+            {
+                lastUpdate = time;
+                Plot.UpdatePlot();
+            }
         }
 
         /// <inheritdoc/>
-        protected override void ShowBuffer(IList<Timestamped<object>> values)
+        public override IObservable<object> Visualize(IObservable<IObservable<object>> source, IServiceProvider provider)
         {
-            base.ShowBuffer(values);
-            if (values.Count > 0)
-            {
-                Plot.UpdatePlot();
-            }
+            var mashupSourceStreams = MashupSources.Select(mashupSource =>
+                mashupSource.Visualizer.Visualize(mashupSource.Source.Output, provider)
+                    .Do(value => mashupSource.Visualizer.Show(value)));
+
+            var mergedMashupSources = Observable.Merge(mashupSourceStreams);
+
+            var processedSource = base.Visualize(source, provider);
+
+            return Observable.Merge(mergedMashupSources, processedSource);
         }
 
         /// <inheritdoc/>

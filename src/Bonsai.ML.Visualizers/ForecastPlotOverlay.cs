@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using OxyPlot.Series;
 using OxyPlot;
 
-[assembly: TypeVisualizer(typeof(ForecastPlotOverlay), Target = typeof(MashupSource<KinematicStateMashup, ForecastVisualizer>))]
+[assembly: TypeVisualizer(typeof(ForecastPlotOverlay), Target = typeof(MashupSource<KinematicStateVisualizer, ForecastVisualizer>))]
 
 namespace Bonsai.ML.Visualizers
 {
@@ -20,7 +20,7 @@ namespace Bonsai.ML.Visualizers
 
         private AreaSeries areaSeries;
 
-        private KinematicStateMashup visualizer;
+        private KinematicStateVisualizer visualizer;
 
         /// <inheritdoc/>
         public override void Show(object value)
@@ -68,11 +68,11 @@ namespace Bonsai.ML.Visualizers
         public override void Load(IServiceProvider provider)
         {
             var service = provider.GetService(typeof(MashupVisualizer));
-            visualizer = (KinematicStateMashup)service;
+            visualizer = (KinematicStateVisualizer)service;
             plot = visualizer.Plot;
 
-            lineSeries = plot.AddNewLineSeries("Forecast Mean", color: OxyColors.LightGoldenrodYellow);
-            areaSeries = plot.AddNewAreaSeries("Forecast Variance", color: OxyColors.LightYellow);
+            lineSeries = plot.AddNewLineSeries("Forecast Mean", color: OxyColors.Yellow);
+            areaSeries = plot.AddNewAreaSeries("Forecast Variance", color: OxyColors.Yellow, opacity: 50);
 
             plot.ResetLineSeries(lineSeries);
             plot.ResetAreaSeries(areaSeries);

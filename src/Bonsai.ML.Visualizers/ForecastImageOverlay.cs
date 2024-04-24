@@ -18,13 +18,18 @@ namespace Bonsai.ML.Visualizers
     public class ForecastImageOverlay : DialogTypeVisualizer
     {
         private ImageMashupVisualizer visualizer;
+        private IplImage overlay;
 
         /// <inheritdoc/>
         public override void Show(object value)
         {
 
             var image = visualizer.VisualizerImage;
-            IplImage imageClone = new IplImage(image.Size, image.Depth, image.Channels);
+            Size size = new Size(image.Width, image.Height);
+            IplDepth depth = image.Depth;
+            int channels = image.Channels;
+
+            overlay = new IplImage(size, depth, channels);
             var alpha = 0.1;
 
             Forecast forecast = (Forecast)value;
@@ -63,10 +68,11 @@ namespace Bonsai.ML.Visualizers
 
                 OxyColor color = OxyColors.Yellow;
 
-                CV.Ellipse(imageClone, center, axes, angle, 0, 360, new Scalar(color.B, color.G, color.R, color.A), -1);
+                CV.Ellipse(overlay, center, axes, angle, 0, 360, new Scalar(color.B, color.G, color.R, color.A), -1);
             }
 
-            CV.AddWeighted(image, 1 - alpha, imageClone, alpha, 1, image);
+            CV.AddWeighted(image, 1 - alpha, overlay, alpha, 1, image);
+            overlay.SetZero();
         }
         
         /// <inheritdoc/>
@@ -78,7 +84,7 @@ namespace Bonsai.ML.Visualizers
         /// <inheritdoc/>
         public override void Unload()
         {
+            overlay.Dispose();
         }
-
     }
 }
