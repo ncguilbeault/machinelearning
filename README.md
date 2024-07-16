@@ -29,6 +29,12 @@ This package provides tools for building and using Hidden Markov Models (HMMs). 
 ### Bonsai.ML.Visualizers
 Offers a set of tools for dynamic graphing and plotting to visualize data.
 
+- **Bonsai.ML.Visualizers.LinearDynamicalSystems**
+    Visualizers specific to the LinearDynamicalSystems package.
+
+- **Bonsai.ML.Visualizers.HiddenMarkovModels**
+    Visualizers specific to the HiddenMarkovModels package.
+
 > [!NOTE]
 > Bonsai.ML packages can be installed through Bonsai's integrated package manager and are generally ready for immediate use. However, some packages may require additional installation steps. Refer to the specific package section for detailed installation guides and documentation.
 
