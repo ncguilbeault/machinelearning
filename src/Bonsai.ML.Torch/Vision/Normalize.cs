@@ -18,12 +18,7 @@ namespace Bonsai.ML.Torch.Vision
 
         public IObservable<Tensor> Process(IObservable<Tensor> source)
         {
-            double[] means = [0.485f, 0.456f, 0.406f];
-            double[] stds = [0.229f, 0.224f, 0.225f];
-
-            inputTransform = transforms.Compose(
-                transforms.Normalize(means, stds)
-            );
+            inputTransform = transforms.Normalize(new double[] { 0.1307 }, new double[] { 0.3081 });
 
             return source.Select(tensor => {
                 return inputTransform.call(tensor);

@@ -5,6 +5,7 @@ using static TorchSharp.torch;
 using System.Xml.Serialization;
 using static TorchSharp.torch.nn;
 using static TorchSharp.torchvision;
+using Bonsai.ML.Torch.NeuralNets;
 
 namespace Bonsai.ML.Torch.Vision
 {
@@ -17,7 +18,7 @@ namespace Bonsai.ML.Torch.Vision
         public Model Model { get; set; } = Model.AlexNet;
         public int? NumClasses { get; set; } = null;
 
-        public IObservable<Module> Process()
+        public IObservable<ITorchModule> Process()
         {
             var modelPath = Model.ToString() + ".pth";
             
@@ -28,7 +29,7 @@ namespace Bonsai.ML.Torch.Vision
                     modelPath);
             }
 
-            Module model;
+            Module<Tensor, Tensor> model;
 
             switch (Model)
             {
@@ -91,7 +92,9 @@ namespace Bonsai.ML.Torch.Vision
                 default:
                     throw new ArgumentException($"Model {Model} not supported.");
             }
-            return Observable.Return(model);
+            
+            var torchModule = new TorchModuleAdapter(model);
+            return Observable.Return((ITorchModule)torchModule);
         }
     }
 }
