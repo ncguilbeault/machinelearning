@@ -43,7 +43,7 @@ Facilitates inference using Hidden Markov Models (HMMs). It interfaces with the 
 Visualizers and editor features for the HiddenMarkovModels package.
 
 ### Bonsai.ML.NeuralDecoder
-Enables online neural decoding of spike sorted or clusterless neural activity. It interfaces with the [bayesian-neural-decoder](https://github.com/ncguilbeault/bayesian-neural-decoder) package using the [Bonsai - Python Scripting](https://github.com/bonsai-rx/python-scripting) library.
+Enables online neural decoding of spike sorted or clusterless neural activity. It interfaces with the [bayesian-neural-decoder](https://github.com/ncguilbeault/bayesian-neural-decoder) package using the [Bonsai - Python Scripting](https://github.com/bonsai-rx/python-scripting) library. The neural decoder consists of a bayesian state-space point process model to decode sorted spikes or clusterless neural activity. The technical details describing the models implementation are described in: Denovellis, E.L., Gillespie, A.K., Coulter, M.E., et al. Hippocampal replay of experience at real-world speeds. eLife 10, e64505 (2021). https://doi.org/10.7554/eLife.64505.
 
 ### Bonsai.ML.NeuralDecoder.Design
 Visualizers for the Neural Decoder package.
