@@ -6,7 +6,7 @@
                  xmlns:p1="clr-namespace:Bonsai.ML;assembly=Bonsai.ML"
                  xmlns:scr="clr-namespace:Bonsai.Scripting.Expressions;assembly=Bonsai.Scripting.Expressions"
                  xmlns="https://bonsai-rx.org/2018/workflow">
-  <Description>Periodically evaluates the `get_fit_finished` function of the HMM. Returns a boolean value representing the objects `fit_finished` attribute. This should onle be used in a state after the `RunFitAsync` function has already been started.</Description>
+  <Description>Periodically evaluates the `get_fit_finished` function of the HMM. Returns true the `fit_finished` attribute is true. This should onle be used after the `RunFitAsync` function has already been started.</Description>
   <Workflow>
     <Nodes>
       <Expression xsi:type="WorkflowInput">
