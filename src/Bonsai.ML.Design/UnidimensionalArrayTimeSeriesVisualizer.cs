@@ -79,10 +79,10 @@ namespace Bonsai.ML.Design
                 AutoSize = true
             };
 
-            plot.StatusStrip.Items.AddRange([
+            plot.StatusStrip.Items.AddRange(new ToolStripItem[] {
                 capacityLabel,
                 capacityValue
-            ]);
+            });
 
             var visualizerService = (IDialogTypeVisualizerService)provider.GetService(typeof(IDialogTypeVisualizerService));
             if (visualizerService != null)
