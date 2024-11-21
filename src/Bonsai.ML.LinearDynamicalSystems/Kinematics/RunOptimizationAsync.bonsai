@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <WorkflowBuilder Version="2.8.5"
                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xmlns:py="clr-namespace:Bonsai.Scripting.Python;assembly=Bonsai.Scripting.Python"
@@ -94,7 +94,7 @@
         <Combinator xsi:type="rx:WithLatestFrom" />
       </Expression>
       <Expression xsi:type="Format">
-        <Format>{0}.run_optimization_async({1}, {2})</Format>
+        <Format>{0}.run_optimization_async(**{1}, {2})</Format>
         <Selector>it.Item1.Item2,it.Item1.Item1, it.Item2</Selector>
       </Expression>
       <Expression xsi:type="InputMapping">
@@ -112,7 +112,7 @@
       </Expression>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="py:Eval">
-          <py:Expression>model1.run_optimization_async(x=372.270477294922,y=149.264526367188, vars_to_estimate = {"sigma_a": True, "sqrt_diag_R": True, "R": True, "m0": True, "sqrt_diag_V0": True, "V0": True}, batch_size = 200)</py:Expression>
+          <py:Expression>model.run_optimization_async(x=372.270477294922,y=149.264526367188, vars_to_estimate = {"sigma_a": True, "sqrt_diag_R": True, "R": True, "m0": True, "sqrt_diag_V0": True, "V0": True}, batch_size = 200)</py:Expression>
         </Combinator>
       </Expression>
       <Expression xsi:type="scr:ExpressionTransform">
