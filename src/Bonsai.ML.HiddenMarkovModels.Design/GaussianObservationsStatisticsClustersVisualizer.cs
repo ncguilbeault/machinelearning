@@ -231,7 +231,7 @@ namespace Bonsai.ML.HiddenMarkovModels.Design
                 {
                     var dim1 = gaussianObservationsStatistics.BatchObservations[i, dimension1SelectedIndex];
                     var dim2 = gaussianObservationsStatistics.BatchObservations[i, dimension2SelectedIndex];
-                    var state = gaussianObservationsStatistics.InferredMostProbableStates[i];
+                    var state = gaussianObservationsStatistics.PredictedStates[i];
                     allScatterSeries[(int)state].Points.Add(new ScatterPoint(dim1, dim2, value: state, tag: state));
                 }
 
