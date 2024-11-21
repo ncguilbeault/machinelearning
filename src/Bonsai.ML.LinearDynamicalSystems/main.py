@@ -148,8 +148,8 @@ class KalmanFilterKinematics(OnlineKalmanFilter):
             self.R = np.diag([self.sigma_x**2, self.sigma_y**2]).astype(np.double)
     
     def run_optimization_async(self, 
-                                x: float, 
-                                y: float,
+                                X: float, 
+                                Y: float,
                                 vars_to_estimate: dict = None, 
                                 batch_size: int = 20,
                                 max_iter: int = 50,
@@ -158,10 +158,10 @@ class KalmanFilterKinematics(OnlineKalmanFilter):
         if not self.is_running:
 
             if self.batch is None:
-                self.batch = np.array([[x, y]])
+                self.batch = np.array([[X, Y]])
 
             elif len(self.batch) < batch_size:
-                self.batch = np.vstack([self.batch, np.array([x, y])])
+                self.batch = np.vstack([self.batch, np.array([X, Y])])
 
             if len(self.batch) == batch_size:
 
