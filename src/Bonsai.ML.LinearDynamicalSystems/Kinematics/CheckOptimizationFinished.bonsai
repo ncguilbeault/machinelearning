@@ -16,7 +16,7 @@
         <Combinator xsi:type="py:ObserveOnGIL" />
       </Expression>
       <Expression xsi:type="ExternalizedMapping">
-        <Property Name="Name" DisplayName="Name" Description="The name of the python variable referencing the model object."  Category="ModelReference" />
+        <Property Name="Name" DisplayName="Name" Description="The name of the python variable referencing the model object." Category="ModelReference" />
       </Expression>
       <Expression xsi:type="SubscribeSubject" TypeArguments="p1:ModelReference">
         <Name>model</Name>
@@ -45,7 +45,7 @@
       </Expression>
       <Expression xsi:type="Combinator">
         <Combinator xsi:type="py:Eval">
-          <py:Expression>model1.get_optimization_finished()</py:Expression>
+          <py:Expression>model.get_optimization_finished()</py:Expression>
         </Combinator>
       </Expression>
       <Expression xsi:type="rx:Condition">
@@ -96,6 +96,11 @@
           <py:Expression>model1.reset_optimization_loop()</py:Expression>
         </Combinator>
       </Expression>
+      <Expression xsi:type="Combinator">
+        <Combinator xsi:type="BooleanProperty">
+          <Value>true</Value>
+        </Combinator>
+      </Expression>
       <Expression xsi:type="WorkflowOutput" />
     </Nodes>
     <Edges>
@@ -120,6 +125,7 @@
       <Edge From="17" To="18" Label="Source1" />
       <Edge From="18" To="19" Label="Source2" />
       <Edge From="19" To="20" Label="Source1" />
+      <Edge From="20" To="21" Label="Source1" />
     </Edges>
   </Workflow>
 </WorkflowBuilder>
