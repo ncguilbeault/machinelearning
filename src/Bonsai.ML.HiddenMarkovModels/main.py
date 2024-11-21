@@ -90,7 +90,7 @@ class HiddenMarkovModel(HMM):
         self.thread = None
         self.curr_batch_size = 0
         self.flush_data_between_batches = True
-        self.inferred_most_probable_states = np.array([], dtype=int)
+        self.predicted_states = np.array([], dtype=int)
 
     def update_params(self, initial_state_distribution, transitions_params, observations_params):
         hmm_params = self.params
@@ -126,6 +126,9 @@ class HiddenMarkovModel(HMM):
             self.observations_params = hmm_params[2] 
         else:
             self.observations_params = (hmm_params[2],)
+
+    def get_predicted_states(self):
+        self.predicted_states = np.array([self.infer_state(obs) for obs in self.batch_observations]).astype(int)
 
     def infer_state(self, observation: list[float]):
 
@@ -226,10 +229,10 @@ class HiddenMarkovModel(HMM):
                     self._fit_finished = True
                     self.curr_batch_size = 0
 
+                    self.get_predicted_states()
+
                     if self.flush_data_between_batches:
                         self.batch = None
-
-                    self.inferred_most_probable_states = np.array([self.infer_state(obs) for obs in self.batch_observations]).astype(int)
 
                 self.is_running = True
 
