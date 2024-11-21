@@ -79,16 +79,19 @@ class KalmanFilterKinematics(OnlineKalmanFilter):
 
         super().__init__(B, Q, m0, V0, Z, R)
 
-    def update(self, x, y):
+    def update(self, 
+               X: float, 
+               Y: float):
 
-        if x is None:
-            x = np.nan
-        if y is None:
-            y = np.nan
+        if X is None:
+            X = np.nan
+        if Y is None:
+            Y = np.nan
 
-        return super().update(y=np.array([x, y]))
+        return super().update(y=np.array([X, Y]))
     
-    def forecast(self, timesteps = 1):
+    def forecast(self, 
+                 timesteps: int = 1):
 
         assert timesteps > 0
 
@@ -111,7 +114,10 @@ class KalmanFilterKinematics(OnlineKalmanFilter):
 
         return forecast_x, forecast_P, forecast_dt
 
-    def optimize(self, vars_to_estimate, max_iter, disp):
+    def optimize(self, 
+                 vars_to_estimate: dict, 
+                 max_iter: int, 
+                 disp: bool):
         sqrt_diag_R = np.array([self.sigma_x, self.sigma_y])
         m0 = self.m0.squeeze().copy()
         sqrt_diag_V0 = (np.ones(len(self.m0))*self.sqrt_diag_V0_value)
@@ -142,12 +148,12 @@ class KalmanFilterKinematics(OnlineKalmanFilter):
             self.R = np.diag([self.sigma_x**2, self.sigma_y**2]).astype(np.double)
 
     def run_optimization(self, 
-                            x, 
-                            y,
-                            vars_to_estimate = None, 
-                            batch_size = 20,
-                            max_iter = 50,
-                            disp = True):
+                            x: float, 
+                            y: float,
+                            vars_to_estimate: dict = None, 
+                            batch_size: int = 20,
+                            max_iter: int = 50,
+                            disp: bool = True):
 
         if self.batch is None:
             self.batch = np.array([[x, y]])
@@ -175,12 +181,12 @@ class KalmanFilterKinematics(OnlineKalmanFilter):
         return False
     
     def run_optimization_async(self, 
-                                x, 
-                                y,
-                                vars_to_estimate = None, 
-                                batch_size = 20,
-                                max_iter = 50,
-                                disp = True):
+                                x: float, 
+                                y: float,
+                                vars_to_estimate: dict = None, 
+                                batch_size: int = 20,
+                                max_iter: int = 50,
+                                disp: bool = True):
 
         if not self.is_running:
 
@@ -294,7 +300,13 @@ class KalmanFilterLinearRegression(TimeVaryingOnlineKalmanFilter):
         if self.x.ndim == 1:
             self.x = self.x[:, np.newaxis]
     
-    def pdf(self, x0 = 0, x1 = 1, xsteps = 100, y0 = 0, y1 = 1, ysteps = 100):
+    def pdf(self, 
+            x0: float = 0, 
+            x1: float = 1, 
+            xsteps: int = 100, 
+            y0: float = 0, 
+            y1: float = 1, 
+            ysteps: int = 100):
 
         self.x0 = x0
         self.x1 = x1
