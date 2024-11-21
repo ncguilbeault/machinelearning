@@ -7,7 +7,7 @@
                  xmlns:p2="clr-namespace:Bonsai.ML.LinearDynamicalSystems;assembly=Bonsai.ML.LinearDynamicalSystems"
                  xmlns:p3="clr-namespace:Bonsai.ML.LinearDynamicalSystems.Kinematics;assembly=Bonsai.ML.LinearDynamicalSystems"
                  xmlns="https://bonsai-rx.org/2018/workflow">
-  <Description>Performs inference on the LDS kinematics model.</Description>
+  <Description>Performs inference with the LDS kinematics model.</Description>
   <Workflow>
     <Nodes>
       <Expression xsi:type="WorkflowInput">
@@ -77,7 +77,7 @@
               <Name>Source1</Name>
             </Expression>
             <Expression xsi:type="Format">
-              <Format>{0}.update({1})</Format>
+              <Format>{0}.update(**{1})</Format>
               <Selector>it.Item2, it.Item1</Selector>
             </Expression>
             <Expression xsi:type="InputMapping">
@@ -95,7 +95,7 @@
             </Expression>
             <Expression xsi:type="Combinator">
               <Combinator xsi:type="py:Exec">
-                <py:Script>model.update(x=0,y=0)</py:Script>
+                <py:Script>model.update(**{"X": 0, "Y": 0})</py:Script>
               </Combinator>
             </Expression>
             <Expression xsi:type="WorkflowOutput" />
