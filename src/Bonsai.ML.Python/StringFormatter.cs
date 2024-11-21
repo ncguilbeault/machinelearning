@@ -14,6 +14,7 @@ namespace Bonsai.ML.Python
     {
         private readonly Dictionary<Type, Action<object, StringBuilder, int>> typeHandlers;
         private readonly Dictionary<Type, PropertyInfo[]> typeProperties;
+        private readonly Dictionary<Type, FieldInfo[]> typeFields;
         private readonly StringBuilder sb;
 
         /// <summary>
@@ -23,6 +24,7 @@ namespace Bonsai.ML.Python
         {
             typeHandlers = new Dictionary<Type, Action<object, StringBuilder, int>>();
             typeProperties = new Dictionary<Type, PropertyInfo[]>();
+            typeFields = new Dictionary<Type, FieldInfo[]>();
             sb = new StringBuilder();
         }
 
@@ -225,6 +227,12 @@ namespace Bonsai.ML.Python
                 typeProperties[type] = properties;
             }
 
+            if (!typeFields.TryGetValue(type, out var fields))
+            {
+                fields = type.GetFields();
+                typeFields[type] = fields;
+            }
+
             return (obj, sb, depth) =>
             {
                 sb.Append('{');
@@ -236,6 +244,15 @@ namespace Bonsai.ML.Python
                     }
                     sb.Append('"').Append(properties[i].Name).Append("\": ");
                     ConvertToPythonString(properties[i].GetValue(obj), sb, depth + 1);
+                }
+                for (int i = 0; i < fields.Length; i++)
+                {
+                    if (i > 0)
+                    {
+                        sb.Append(", ");
+                    }
+                    sb.Append('"').Append(fields[i].Name).Append("\": ");
+                    ConvertToPythonString(fields[i].GetValue(obj), sb, depth + 1);
                 }
                 sb.Append('}');
             };
