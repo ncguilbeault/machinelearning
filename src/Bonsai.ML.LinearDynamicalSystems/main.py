@@ -146,39 +146,6 @@ class KalmanFilterKinematics(OnlineKalmanFilter):
             self.sigma_x = optim_res_ga["x"]["sqrt_diag_R"][0]
             self.sigma_y = optim_res_ga["x"]["sqrt_diag_R"][1]
             self.R = np.diag([self.sigma_x**2, self.sigma_y**2]).astype(np.double)
-
-    def run_optimization(self, 
-                            x: float, 
-                            y: float,
-                            vars_to_estimate: dict = None, 
-                            batch_size: int = 20,
-                            max_iter: int = 50,
-                            disp: bool = True):
-
-        if self.batch is None:
-            self.batch = np.array([[x, y]])
-
-        elif len(self.batch) < batch_size:
-            self.batch = np.vstack([self.batch, np.array([x, y])])
-
-        if len(self.batch) == batch_size:
-
-            if vars_to_estimate is None:
-                vars_to_estimate = { 
-                    "sigma_a": True, 
-                    "sqrt_diag_R": True, 
-                    "R" : True, 
-                    "m0" : True, 
-                    "sqrt_diag_V0": True, 
-                    "V0" : True 
-                }
-
-            self.optimize(vars_to_estimate, max_iter, disp)
-            self.batch = None
-
-            return True
-        
-        return False
     
     def run_optimization_async(self, 
                                 x: float, 
