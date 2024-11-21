@@ -13,7 +13,7 @@
         <Name>Source1</Name>
       </Expression>
       <Expression xsi:type="ExternalizedMapping">
-        <Property Name="Name" DisplayName="Name" Description="The name of the python variable referencing the model object."  Category="ModelReference" />
+        <Property Name="Name" DisplayName="Name" Description="The name of the python variable referencing the model object." Category="ModelReference" />
         <Property Name="TimerFrequency" DisplayName="TimerFrequency" Description="The frequency with which to check if the asynchronous fit loop is complete." Category="Polling" />
       </Expression>
       <Expression xsi:type="rx:SelectMany">
