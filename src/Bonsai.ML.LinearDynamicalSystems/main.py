@@ -104,7 +104,7 @@ class KalmanFilterKinematics(OnlineKalmanFilter):
 
         for i in range(timesteps):
             self.predict()
-            self.update(x = np.nan, y = np.nan)
+            self.update(X = np.nan, Y = np.nan)
             forecast_x.append(self.x)
             forecast_P.append(self.P)
             forecast_dt.append(self.dt * (i + 1))
