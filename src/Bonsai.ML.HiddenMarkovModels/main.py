@@ -132,10 +132,13 @@ class HiddenMarkovModel(HMM):
 
     def infer_state(self, observation: list[float]):
 
-        self.log_alpha = self.compute_log_alpha(
-            np.expand_dims(np.array(observation), 0), self.log_alpha)
+        observation = np.expand_dims(np.array(observation), 0)
+        self.log_alpha = self.compute_log_alpha(observation, self.log_alpha)
         self.state_probabilities = np.exp(self.log_alpha).astype(np.double)
-        return self.state_probabilities.argmax()
+        prediction = self.state_probabilities.argmax()
+        self.predicted_states = np.append(self.predicted_states, prediction)
+        self.batch_observations = np.vstack([self.batch_observations, observation])
+        return prediction
 
     def compute_log_alpha(self, obs, log_alpha=None):
 
@@ -181,8 +184,6 @@ class HiddenMarkovModel(HMM):
         elif self.curr_batch_size == batch_size:
             self.batch = np.vstack(
                 [self.batch[1:], np.expand_dims(np.array(observation), 0)])
-
-        self.batch_observations = self.batch
 
         if not self.is_running and self.loop is None and self.thread is None:
 

@@ -45,9 +45,9 @@ namespace Bonsai.ML.HiddenMarkovModels.Observations
         public double[,] BatchObservations { get; set; }
 
         /// <summary>
-        /// The sequence of inferred most probable states.
+        /// The predicted state for each observation in the batch of observations.
         /// </summary>
-        [Description("The sequence of inferred most probable states.")]
+        [Description("The predicted state for each observation in the batch of observations.")]
         [XmlIgnore]
         public long[] PredictedStates { get; set; }
 
@@ -72,7 +72,7 @@ namespace Bonsai.ML.HiddenMarkovModels.Observations
                     StdDevs = stdDevsPyObj,
                     CovarianceMatrices = covarianceMatricesPyObj,
                     BatchObservations = batchObservationsPyObj,
-                    PredictedStates = predictedStatesPyObj
+                    PredictedStates = PredictedStates
                 };
             });
         }

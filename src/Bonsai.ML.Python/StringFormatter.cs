@@ -229,7 +229,7 @@ namespace Bonsai.ML.Python
 
             if (!typeFields.TryGetValue(type, out var fields))
             {
-                fields = type.GetFields();
+                fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
                 typeFields[type] = fields;
             }
 
