@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Reactive.Linq;
 using static TorchSharp.torch;
 
 namespace Bonsai.ML.Torch
@@ -49,6 +51,11 @@ namespace Bonsai.ML.Torch
                 else if (indexString.Contains(":"))
                 {
                     var rangeParts = indexString.Split(':');
+                    rangeParts = rangeParts.Where(p => {
+                        p = p.Trim();
+                        return !string.IsNullOrEmpty(p);
+                    }).ToArray();
+
                     if (rangeParts.Length == 0)
                     {
                         indices[i] = TensorIndex.Slice();

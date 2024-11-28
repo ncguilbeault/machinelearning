@@ -84,7 +84,19 @@ namespace Bonsai.ML.Python
                 return (obj, sb, _) => sb.Append(((bool)obj).ToString().ToLower());
             }
 
-            if (type == typeof(int) || type == typeof(double) || type == typeof(float) || type == typeof(long) || type == typeof(short) || type == typeof(byte) || type == typeof(ushort) || type == typeof(uint) || type == typeof(ulong) || type == typeof(sbyte) || type == typeof(decimal))
+            if (type == typeof(double) || type == typeof(float))
+            {
+                return (obj, sb, _) => {
+                    if ((obj is double d && double.IsNaN(d)) || (obj is float f && float.IsNaN(f)))
+                    {
+                        sb.Append("float('nan')");
+                        return;
+                    }
+                    sb.Append(obj);
+                };
+            }            
+
+            if (type == typeof(int) || type == typeof(long) || type == typeof(short) || type == typeof(byte) || type == typeof(ushort) || type == typeof(uint) || type == typeof(ulong) || type == typeof(sbyte) || type == typeof(decimal))
             {
                 return (obj, sb, _) => sb.Append(obj);
             }

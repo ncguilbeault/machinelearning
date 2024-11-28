@@ -6,76 +6,66 @@ using System.Collections.Generic;
 using OxyPlot.Series;
 using OxyPlot;
 using Bonsai.ML.Design;
+using Bonsai.Vision.Design;
+using System.Linq;
 
-[assembly: TypeVisualizer(typeof(Bonsai.ML.NeuralDecoder.Design.TruePositionOverlay),
-    Target = typeof(MashupSource<Bonsai.ML.NeuralDecoder.Design.PosteriorVisualizer, TimeSeriesVisualizer>))]
+[assembly: TypeVisualizer(typeof(Bonsai.ML.NeuralDecoder.Design.TruePosition2DOverlay),
+    Target = typeof(MashupSource<Bonsai.ML.NeuralDecoder.Design.Posterior2DVisualizer, PointVisualizer>))]
 
 namespace Bonsai.ML.NeuralDecoder.Design
 {
     /// <summary>
     /// Class that overlays the true 
     /// </summary>
-    public class TruePositionOverlay : DialogTypeVisualizer
+    public class TruePosition2DOverlay : DialogTypeVisualizer
     {
-        private PosteriorVisualizer visualizer;
+        private Posterior2DVisualizer visualizer;
         private LineSeries lineSeries;
-        private List<double> data = new();
+        private List<double[]> data = new();
         private string defaultYAxisTitle;
         private HeatMapSeriesOxyPlotBase plot;
+        private int dataCount;
 
         /// <inheritdoc/>
         public override void Load(IServiceProvider provider)
         {
             var service = provider.GetService(typeof(MashupVisualizer));
-            visualizer = (PosteriorVisualizer)service;
+            visualizer = (Posterior2DVisualizer)service;
             plot = visualizer.Plot;
 
             lineSeries = new LineSeries()
             {
                 Title = "True Position",
-                Color = OxyColors.Goldenrod
+                Color = OxyColors.LimeGreen
             };
 
             plot.Model.Series.Add(lineSeries);
 
+#pragma warning disable CS0618 // Type or member is obsolete
             plot.Model.Updated += (sender, e) =>
             {
                 defaultYAxisTitle = plot.Model.DefaultYAxis.Title;
                 plot.Model.DefaultYAxis.Title = "Position";
             };
-            
+#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         /// <inheritdoc/>
         public override void Show(object value)
         {
-            var position = (double)value;
-            if (position == double.NaN)
+            var position = (double[])value;
+            if (position.Any(double.IsNaN))
             {
                 return;
             }
 
-            data.Add(position);
+            dataCount++;
+            lineSeries.Points.Add(new DataPoint(position[0], position[1]));
 
-            var currentCount = visualizer.CurrentCount;
-            var valueRange = visualizer.ValueRange;
-            var valueCenters = visualizer.ValueCenters;
-
-            while (data.Count > currentCount)
+            while (dataCount > visualizer.Capacity)
             {
-                data.RemoveAt(0);
-            }
-            lineSeries.Points.Clear();
-            
-            var count = data.Count;
-            for (int i = 0; i < count; i++)
-            {
-                var closestIndex = Array.BinarySearch(valueRange, data[i]);
-                if (closestIndex < 0)
-                {
-                    closestIndex = ~closestIndex;
-                }
-                lineSeries.Points.Add(new DataPoint(currentCount - count + i, valueCenters[closestIndex]));
+                lineSeries.Points.RemoveAt(0);
+                dataCount--;
             }
         }
 

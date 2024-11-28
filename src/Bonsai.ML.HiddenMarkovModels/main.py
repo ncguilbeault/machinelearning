@@ -36,6 +36,8 @@ class HiddenMarkovModel(HMM):
         self.dimensions = dimensions
         self.observations_model_type = observations_model_type
         self.transitions_model_type = transitions_model_type
+        self.observations_kwargs = observations_kwargs
+        self.transitions_kwargs = transitions_kwargs
 
         if observations_kwargs is not None:
             for (key, value) in observations_kwargs.items():
@@ -52,6 +54,13 @@ class HiddenMarkovModel(HMM):
             if "nonlinearity_type" in transitions_kwargs.keys():
                 transitions_kwargs["nonlinearity"] = value
                 transitions_kwargs.pop(key)
+
+        if self.observations_model_type == "autoregressive":
+            self.mask = np.ones((1,dimensions), dtype=bool)
+            self.input = np.zeros((1,0))
+        else:
+            self.mask = None
+            self.input = None
 
         super(HiddenMarkovModel, self).__init__(
             K=self.num_states, 
@@ -83,7 +92,7 @@ class HiddenMarkovModel(HMM):
         self.state_probabilities = None
 
         self.batch = None
-        self.batch_observations = np.array([[]], dtype=float)
+        self.batch_observations = np.array([[]], dtype=float).reshape((0, dimensions))
         self.is_running = False
         self._fit_finished = False
         self.loop = None
@@ -91,6 +100,7 @@ class HiddenMarkovModel(HMM):
         self.curr_batch_size = 0
         self.flush_data_between_batches = True
         self.predicted_states = np.array([], dtype=int)
+        self.buffer_count = 250
 
     def update_params(self, initial_state_distribution, transitions_params, observations_params):
         hmm_params = self.params
@@ -127,30 +137,33 @@ class HiddenMarkovModel(HMM):
         else:
             self.observations_params = (hmm_params[2],)
 
-    def get_predicted_states(self):
-        self.predicted_states = np.array([self.infer_state(obs) for obs in self.batch_observations]).astype(int)
-
     def infer_state(self, observation: list[float]):
 
         observation = np.expand_dims(np.array(observation), 0)
         self.log_alpha = self.compute_log_alpha(observation, self.log_alpha)
         self.state_probabilities = np.exp(self.log_alpha).astype(np.double)
+        if (self.observations_model_type == "autoregressive" and self.observations_kwargs["lags"] > 1):
+            self.state_probabilities = np.sum(self.state_probabilities, axis=0)
         prediction = self.state_probabilities.argmax()
         self.predicted_states = np.append(self.predicted_states, prediction)
+        if self.predicted_states.shape[0] > self.buffer_count:
+            self.predicted_states = self.predicted_states[1:]
         self.batch_observations = np.vstack([self.batch_observations, observation])
+        if self.batch_observations.shape[0] == self.buffer_count:
+            self.batch_observations = self.batch_observations[1:]
         return prediction
 
     def compute_log_alpha(self, obs, log_alpha=None):
 
         if log_alpha is None:
             log_alpha = (np.log(self.init_state_distn.initial_state_distn) +
-                         self.observations.log_likelihoods(obs, None, None, None)).squeeze()
+                         self.observations.log_likelihoods(obs, self.input, self.mask, None)).squeeze()
             return log_alpha - logsumexp(log_alpha)
 
         m = np.max(log_alpha)
 
         log_alpha = (np.log(np.dot(np.exp(log_alpha - m), self.transitions.transition_matrices(obs, None, None, None).squeeze())
-                            ) + m + self.observations.log_likelihoods(obs, None, None, None)).squeeze()
+                            ) + m + self.observations.log_likelihoods(obs, self.input, self.mask, None)).squeeze()
 
         return log_alpha - logsumexp(log_alpha)
     
@@ -230,8 +243,6 @@ class HiddenMarkovModel(HMM):
                     self._fit_finished = True
                     self.curr_batch_size = 0
 
-                    self.get_predicted_states()
-
                     if self.flush_data_between_batches:
                         self.batch = None
 
@@ -246,7 +257,7 @@ class HiddenMarkovModel(HMM):
                     self.thread.start()
 
                 future = asyncio.run_coroutine_threadsafe(self._fit_async(
-                    self.batch, method="em", num_iters=max_iter, init_method="kmeans"), self.loop)
+                    datas=self.batch, inputs=self.input, masks=np.tile(self.mask, (len(self.batch), 1)), method="em", num_iters=max_iter, init_method="kmeans"), self.loop)
                 future.add_done_callback(on_completion)
 
         return self.is_running

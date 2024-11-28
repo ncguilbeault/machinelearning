@@ -23,23 +23,28 @@ namespace Bonsai.ML.Design
         /// </summary>
         public int RenderMethodSelectedIndex { get; set; }
 
-        private HeatMapSeriesOxyPlotBase Plot;
+        private HeatMapSeriesOxyPlotBase plot;
+
+        /// <summary>
+        /// Gets the underlying heatmap plot.
+        /// </summary>
+        public HeatMapSeriesOxyPlotBase Plot => plot;
 
         /// <inheritdoc/>
         public override void Load(IServiceProvider provider)
         {
-            Plot = new HeatMapSeriesOxyPlotBase(PaletteSelectedIndex, RenderMethodSelectedIndex)
+            plot = new HeatMapSeriesOxyPlotBase(PaletteSelectedIndex, RenderMethodSelectedIndex)
             {
                 Dock = DockStyle.Fill,
             };
 
-            Plot.PaletteComboBoxValueChanged += PaletteIndexChanged;
-            Plot.RenderMethodComboBoxValueChanged += RenderMethodIndexChanged;
+            plot.PaletteComboBoxValueChanged += PaletteIndexChanged;
+            plot.RenderMethodComboBoxValueChanged += RenderMethodIndexChanged;
 
             var visualizerService = (IDialogTypeVisualizerService)provider.GetService(typeof(IDialogTypeVisualizerService));
             if (visualizerService != null)
             {
-                visualizerService.AddControl(Plot);
+                visualizerService.AddControl(plot);
             }
         }
 
@@ -49,7 +54,7 @@ namespace Bonsai.ML.Design
             var mdarray = (double[,])value;
             var shape = new int[] {mdarray.GetLength(0), mdarray.GetLength(1)};
 
-            Plot.UpdateHeatMapSeries(
+            plot.UpdateHeatMapSeries(
                 -0.5,
                 shape[0] - 0.5,
                 -0.5,
@@ -57,26 +62,26 @@ namespace Bonsai.ML.Design
                 mdarray
             );
 
-            Plot.UpdatePlot();
+            plot.UpdatePlot();
         }
 
         /// <inheritdoc/>
         public override void Unload()
         {
-            if (!Plot.IsDisposed)
+            if (!plot.IsDisposed)
             {
-                Plot.Dispose();
+                plot.Dispose();
             }
         }
 
         private void PaletteIndexChanged(object sender, EventArgs e)
         {
-            PaletteSelectedIndex = Plot.PaletteComboBox.SelectedIndex;
+            PaletteSelectedIndex = plot.PaletteComboBox.SelectedIndex;
         }
         
         private void RenderMethodIndexChanged(object sender, EventArgs e)
         {
-            RenderMethodSelectedIndex = Plot.RenderMethodComboBox.SelectedIndex;
+            RenderMethodSelectedIndex = plot.RenderMethodComboBox.SelectedIndex;
         }
     }
 }

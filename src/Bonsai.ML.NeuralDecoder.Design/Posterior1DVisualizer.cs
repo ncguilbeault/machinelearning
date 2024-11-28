@@ -10,7 +10,7 @@ using System.Reactive.Linq;
 using System.Linq;
 using System.Xml.Serialization;
 
-[assembly: TypeVisualizer(typeof(Bonsai.ML.NeuralDecoder.Design.PosteriorVisualizer),
+[assembly: TypeVisualizer(typeof(Bonsai.ML.NeuralDecoder.Design.Posterior1DVisualizer),
     Target = typeof(Bonsai.ML.NeuralDecoder.Posterior))]
 
 namespace Bonsai.ML.NeuralDecoder.Design
@@ -18,7 +18,7 @@ namespace Bonsai.ML.NeuralDecoder.Design
     /// <summary>
     /// Provides a mashup visualizer to display the posterior of the neural decoder.
     /// </summary>    
-    public class PosteriorVisualizer : MashupVisualizer
+    public class Posterior1DVisualizer : MashupVisualizer
     {
         private UnidimensionalArrayTimeSeriesVisualizer visualizer;
         private LineSeries lineSeries;
@@ -85,16 +85,16 @@ namespace Bonsai.ML.NeuralDecoder.Design
 
             if (valueCenters == null)
             {
-                valueCenters = posterior.ValueCenters;
+                valueCenters = posterior.ValueCenters1D;
             }
 
             if (valueRange == null)
             {
-                valueRange = posterior.ValueRange;
+                valueRange = posterior.ValueRange1D;
             }
 
-            var data = posterior.Data;
-            var argMax = posterior.ArgMax;
+            var data = posterior.Data1D;
+            var argMax = posterior.ArgMax1D;
 
             while (argMaxVals.Count >= Capacity)
             {
