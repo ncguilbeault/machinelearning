@@ -39,7 +39,7 @@ namespace Bonsai.ML.Design
         /// <summary>
         /// Gets or sets the current length of the data array.
         /// </summary>
-        public int CurrentArrayLength { get; set; }
+        public int CurrentArrayLength { get; set; } = 0;
 
         private int _capacity = 100;
 

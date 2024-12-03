@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Reactive.Linq;
 using System.Linq;
 using System.Xml.Serialization;
+using System.Reflection;
 
 [assembly: TypeVisualizer(typeof(Bonsai.ML.NeuralDecoder.Design.Posterior1DVisualizer),
     Target = typeof(Bonsai.ML.NeuralDecoder.Posterior))]
@@ -64,12 +65,12 @@ namespace Bonsai.ML.NeuralDecoder.Design
             
             visualizer.Load(provider);
 
-            lineSeries = new LineSeries()
-            {
-                Title = "Maximum Posterior",
-                Color = OxyColors.SkyBlue
-            };
-            visualizer.Plot.Model.Series.Add(lineSeries);
+            // lineSeries = new LineSeries()
+            // {
+            //     Title = "Maximum Posterior",
+            //     Color = OxyColors.SkyBlue
+            // };
+            // visualizer.Plot.Model.Series.Add(lineSeries);
 
             base.Load(provider);
         }
@@ -85,30 +86,30 @@ namespace Bonsai.ML.NeuralDecoder.Design
 
             if (valueCenters == null)
             {
-                valueCenters = posterior.ValueCenters1D;
+                valueCenters = posterior.ValueCenters;
             }
 
             if (valueRange == null)
             {
-                valueRange = posterior.ValueRange1D;
+                valueRange = posterior.ValueRange;
             }
 
-            var data = posterior.Data1D;
-            var argMax = posterior.ArgMax1D;
+            var data = posterior.Data;
+            // var argMax = posterior.ArgMax;
 
-            while (argMaxVals.Count >= Capacity)
-            {
-                argMaxVals.RemoveAt(0);
-            }
+            // while (argMaxVals.Count >= Capacity)
+            // {
+            //     argMaxVals.RemoveAt(0);
+            // }
 
-            argMaxVals.Add(valueCenters[argMax]);
-            lineSeries.Points.Clear();
-            var count = argMaxVals.Count;
+            // argMaxVals.Add(valueCenters[argMax]);
+            // lineSeries.Points.Clear();
+            // var count = argMaxVals.Count;
 
-            for (int i = 0; i < count; i++)
-            {
-                lineSeries.Points.Add(new DataPoint(i, argMaxVals[i]));
-            }
+            // for (int i = 0; i < count; i++)
+            // {
+            //     lineSeries.Points.Add(new DataPoint(i, argMaxVals[i]));
+            // }
             
             visualizer.Show(data);
             Plot.UpdateHeatMapYAxis(valueRange[0], valueRange[valueRange.Length - 1]);
@@ -129,17 +130,34 @@ namespace Bonsai.ML.NeuralDecoder.Design
                 return source;
             }
 
-            var mergedSource = source.SelectMany(xs => xs
-                .Do(value => Show(value)));
+            var timer = Observable.Interval(TimeSpan.FromMilliseconds(100));
+
+            IObservable<object> SynchronizeAndShow(IObservable<object> stream, Action<object> showAction)
+            {
+                return stream
+                    .Buffer(timer)
+                    .Where(buffer => buffer.Count > 0)
+                    .SelectMany(buffer =>
+                    {
+                        foreach (var item in buffer)
+                        {
+                            showAction(item);
+                        }
+                        return buffer;
+                    });
+            }
+
+            var mergedSource = source.SelectMany(xs =>
+                SynchronizeAndShow(xs, value => Show(value)));
 
             var mashupSourceStreams = Observable.Merge(
                 MashupSources.Select(mashupSource =>
-                    mashupSource.Source.Output.SelectMany(xs => xs
-                        .Do(value => mashupSource.Visualizer.Show(value)))));
+                    SynchronizeAndShow(
+                        mashupSource.Source.Output.SelectMany(xs => xs),
+                        value => mashupSource.Visualizer.Show(value))));
 
             return Observable.Merge(mergedSource, mashupSourceStreams)
                 .ObserveOn(visualizerControl);
-
         }
     }
 }

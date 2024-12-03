@@ -13,14 +13,14 @@ namespace Bonsai.ML.Torch.Vision
     [Description("")]
     [WorkflowElementCategory(ElementCategory.Transform)]
     public class Normalize
-    {       
-        private ITransform inputTransform;
+    {
+        public double[] Means { get; set; } = [ 0.1307 ];
+        public double[] StdDevs { get; set; } = [ 0.3081 ];
 
         public IObservable<Tensor> Process(IObservable<Tensor> source)
         {
-            inputTransform = transforms.Normalize(new double[] { 0.1307 }, new double[] { 0.3081 });
-
             return source.Select(tensor => {
+                var inputTransform = transforms.Normalize(Means, StdDevs, tensor.dtype, tensor.device);
                 return inputTransform.call(tensor);
             });
         }

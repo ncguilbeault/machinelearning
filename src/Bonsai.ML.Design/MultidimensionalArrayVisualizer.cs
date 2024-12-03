@@ -26,7 +26,7 @@ namespace Bonsai.ML.Design
         private HeatMapSeriesOxyPlotBase plot;
 
         /// <summary>
-        /// Gets the underlying heatmap plot.
+        /// Gets the plot control.
         /// </summary>
         public HeatMapSeriesOxyPlotBase Plot => plot;
 

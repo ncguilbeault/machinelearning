@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Reactive.Linq;
+using System.Collections.Generic;
 using static TorchSharp.torch;
 
 namespace Bonsai.ML.Torch
@@ -51,31 +52,23 @@ namespace Bonsai.ML.Torch
                 else if (indexString.Contains(":"))
                 {
                     var rangeParts = indexString.Split(':');
-                    rangeParts = rangeParts.Where(p => {
-                        p = p.Trim();
-                        return !string.IsNullOrEmpty(p);
-                    }).ToArray();
-
-                    if (rangeParts.Length == 0)
+                    rangeParts = rangeParts.ToArray();
+                    var argsList = new List<long?>([null, null, null]);
+                    try
                     {
-                        indices[i] = TensorIndex.Slice();
+                        for (int j = 0; j < rangeParts.Length; j++)
+                        {
+                            if (!string.IsNullOrEmpty(rangeParts[j]))
+                            {
+                                argsList[j] = long.Parse(rangeParts[j]);
+                            }
+                        }
                     }
-                    else if (rangeParts.Length == 1)
-                    {
-                        indices[i] = TensorIndex.Slice(int.Parse(rangeParts[0]));
-                    }
-                    else if (rangeParts.Length == 2)
-                    {
-                        indices[i] = TensorIndex.Slice(int.Parse(rangeParts[0]), int.Parse(rangeParts[1]));
-                    }
-                    else if (rangeParts.Length == 3)
-                    {
-                        indices[i] = TensorIndex.Slice(int.Parse(rangeParts[0]), int.Parse(rangeParts[1]), int.Parse(rangeParts[2]));
-                    }
-                    else
+                    catch (Exception)
                     {
                         throw new Exception($"Invalid index format: {indexString}");
                     }
+                    indices[i] = TensorIndex.Slice(argsList[0], argsList[1], argsList[2]);
                 }
                 else
                 {
@@ -83,16 +76,6 @@ namespace Bonsai.ML.Torch
                 }
             }
             return indices;
-        }
-
-        /// <summary>
-        /// Serializes the input array of tensor indexes into a string representation.
-        /// </summary>
-        /// <param name="indexes"></param>
-        /// <returns></returns>
-        public static string Serialize(TensorIndex[] indexes)
-        {
-            return string.Join(", ", indexes);
         }
     }
 }

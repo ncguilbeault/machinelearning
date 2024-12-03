@@ -11,22 +11,20 @@ using Bonsai.Vision.Design;
 using OpenCV.Net;
 using System.Linq;
 
-[assembly: TypeVisualizer(typeof(Bonsai.ML.NeuralDecoder.Design.TruePosition2DOverlay),
-    Target = typeof(MashupSource<Bonsai.ML.NeuralDecoder.Design.Posterior2DVisualizer, PointVisualizer>))]
+[assembly: TypeVisualizer(typeof(Bonsai.ML.NeuralDecoder.Design.TrackGraphOverlay),
+    Target = typeof(MashupSource<Bonsai.ML.NeuralDecoder.Design.Posterior2DVisualizer, MultidimensionalArrayVisualizer>))]
 
 namespace Bonsai.ML.NeuralDecoder.Design
 {
     /// <summary>
     /// Class that overlays the true 
     /// </summary>
-    public class TruePosition2DOverlay : DialogTypeVisualizer
+    public class TrackGraphOverlay : DialogTypeVisualizer
     {
         private Posterior2DVisualizer visualizer;
         internal LineSeries lineSeries;
         internal ScatterSeries scatterSeries;
-        private string defaultYAxisTitle;
         private HeatMapSeriesOxyPlotBase plot;
-        private int dataCount;
 
         /// <inheritdoc/>
         public override void Load(IServiceProvider provider)
@@ -37,62 +35,49 @@ namespace Bonsai.ML.NeuralDecoder.Design
 
             lineSeries = new LineSeries()
             {
-                Title = "True Position",
-                Color = OxyColors.LimeGreen,
+                Title = "Track Graph Edges",
+                Color = OxyColors.Red,
                 StrokeThickness = 2
             };
 
             var colorAxis = new LinearColorAxis()
             {
                 IsAxisVisible = false,
-                Key = "TruePositionColorAxis"
+                Key = "TrackGraphColorAxis"
             };
 
             scatterSeries = new ScatterSeries()
             {
                 MarkerType = MarkerType.Circle,
                 MarkerSize = 10,
-                MarkerFill = OxyColors.LimeGreen,
-                Title = "Current Position",
-                ColorAxisKey = "TruePositionColorAxis"
+                MarkerFill = OxyColors.Red,
+                Title = "Track Graph Nodes",
+                ColorAxisKey = "TrackGraphColorAxis"
             };
 
             plot.Model.Series.Add(scatterSeries);
             plot.Model.Series.Add(lineSeries);
             plot.Model.Axes.Add(colorAxis);
-
-#pragma warning disable CS0618 // Type or member is obsolete
-            plot.Model.Updated += (sender, e) =>
-            {
-                defaultYAxisTitle = plot.Model.DefaultYAxis.Title;
-                plot.Model.DefaultYAxis.Title = "Position";
-            };
-#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         /// <inheritdoc/>
         public override void Show(object value)
         {
-            dynamic position = value;
+            var nodes = (double[,])value;
 
-            dataCount++;
-            lineSeries.Points.Add(new DataPoint(position.X, position.Y));
-            scatterSeries.Points.Clear();
-            scatterSeries.Points.Add(new ScatterPoint(position.X, position.Y, value: 1));
-
-            while (dataCount > visualizer.Capacity)
+            for (int i = 0; i < nodes.GetLength(0); i++)
             {
-                lineSeries.Points.RemoveAt(0);
-                dataCount--;
+                var position = new DataPoint(nodes[i, 0], nodes[i, 1]);
+                scatterSeries.Points.Add(new ScatterPoint(position.X, position.Y, value: 1));
+                lineSeries.Points.Add(new DataPoint(position.X, position.Y));
             }
         }
-
-
 
         /// <inheritdoc/>
         public override void Unload()
         {
-            plot.Model.DefaultYAxis.Title = defaultYAxisTitle;
+            scatterSeries.Points.Clear();
+            lineSeries.Points.Clear();
         }
     }
 }

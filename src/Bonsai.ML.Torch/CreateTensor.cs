@@ -11,6 +11,7 @@ using static TorchSharp.torch;
 using Bonsai.ML.Data;
 using Bonsai.ML.Python;
 using Bonsai.ML.Torch.Helpers;
+using TorchSharp;
 
 namespace Bonsai.ML.Torch
 {
@@ -117,7 +118,7 @@ namespace Bonsai.ML.Torch
                 Expression.Constant(null, typeof(string).MakeArrayType())
             );
 
-            var tensorVariable = Expression.Variable(typeof(Tensor), "tensor");
+            var tensorVariable = Expression.Variable(typeof(torch.Tensor), "tensor");
             var assignTensor = Expression.Assign(tensorVariable, tensorAssignment);
 
             var buildTensor = Expression.Block(
@@ -178,7 +179,7 @@ namespace Bonsai.ML.Torch
                 tensorCreationMethodArguments
             );
 
-            var tensorVariable = Expression.Variable(typeof(Tensor), "tensor");
+            var tensorVariable = Expression.Variable(typeof(torch.Tensor), "tensor");
             var assignTensor = Expression.Assign(tensorVariable, tensorAssignment);
 
             var buildTensor = Expression.Block(

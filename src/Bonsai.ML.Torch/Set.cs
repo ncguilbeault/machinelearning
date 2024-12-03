@@ -19,13 +19,7 @@ namespace Bonsai.ML.Torch
         /// <summary>
         /// The index at which to set the value.
         /// </summary>
-        public string Index 
-        { 
-            get => IndexHelper.Serialize(indexes);
-            set => indexes = IndexHelper.Parse(value);
-        }
-
-        private TensorIndex[] indexes;
+        public string Index { get; set; } = string.Empty;
 
         /// <summary>
         /// The value to set at the specified index.
@@ -41,6 +35,7 @@ namespace Bonsai.ML.Torch
         public IObservable<Tensor> Process(IObservable<Tensor> source)
         {
             return source.Select(tensor => {
+                var indexes = IndexHelper.Parse(Index);
                 return tensor.index_put_(Value, indexes);
             });
         }
