@@ -6,7 +6,6 @@
 # * Build documentation
 # * Render workflow images
 # * Publish packages to GitHub
-# * Publish packages to NuGet.org
 # * Publish documentation
 # =======================================================================================================================================================================
 # Note that this is a generic workflow meant for all Bonsai packages. Minor local modifications are fine, see https://github.com/bonsai-rx/prefect for more information.
@@ -189,10 +188,11 @@ jobs:
 
       # ----------------------------------------------------------------------- Set up Bonsai environments
       - name: Set up Bonsai environments
-        uses: bonsai-rx/setup-bonsai@v1
+        uses: ncguilbeault/setup-bonsai@main
         with:
           environment-paths: '**/.bonsai/'
           inject-packages: artifacts/packages/*.nupkg
+          enable-cache: 'false'
 
       # ----------------------------------------------------------------------- Render
       - name: Render images
@@ -255,42 +255,6 @@ jobs:
           DOTNET_SYSTEM_NET_HTTP_USESOCKETSHTTPHANDLER: 0
 
   # =====================================================================================================================================================================
-  # Publish packages to NuGet.org
-  #  ___      _    _ _    _                    _                      _         _  _       ___     _
-  # | _ \_  _| |__| (_)__| |_    _ __  __ _ __| |____ _ __ _ ___ ___ | |_ ___  | \| |_  _ / __|___| |_   ___ _ _ __ _
-  # |  _/ || | '_ \ | (_-< ' \  | '_ \/ _` / _| / / _` / _` / -_|_-< |  _/ _ \ | .` | || | (_ / -_)  _|_/ _ \ '_/ _` |
-  # |_|  \_,_|_.__/_|_/__/_||_| | .__/\__,_\__|_\_\__,_\__, \___/__/  \__\___/ |_|\_|\_,_|\___\___|\__(_)___/_| \__, |
-  #                             |_|                    |___/                                                    |___/
-  # =====================================================================================================================================================================
-  publish-packages-nuget-org:
-    name: Publish packages to NuGet.org
-    runs-on: ubuntu-latest
-    environment: public-release
-    needs: build
-    if: github.event_name == 'release'
-    steps:
-      # ----------------------------------------------------------------------- Set up .NET
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.x
-
-      # ----------------------------------------------------------------------- Download built packages
-      - name: Download built packages
-        uses: actions/download-artifact@v4
-        with:
-          name: Packages
-          path: artifacts/packages/
-
-      # ----------------------------------------------------------------------- Push to NuGet.org
-      - name: Push to NuGet.org
-        run: dotnet nuget push "artifacts/packages/*.nupkg" --api-key ${{secrets.NUGET_API_KEY}} --source ${{vars.NUGET_API_URL}}
-        env:
-          # This is a workaround for https://github.com/NuGet/Home/issues/9775
-          DOTNET_SYSTEM_NET_HTTP_USESOCKETSHTTPHANDLER: 0
-
-
-  # =====================================================================================================================================================================
   # Publish documentation
   #  ___      _    _ _    _         _                            _        _   _
   # | _ \_  _| |__| (_)__| |_    __| |___  __ _  _ _ __  ___ _ _| |_ __ _| |_(_)___ _ _
@@ -301,7 +265,7 @@ jobs:
     name: Publish documentation
     runs-on: ubuntu-latest
     # Publishing is not strictly necessary here, but if we're going to do a public release we want to wait to publish the docs until it goes out
-    needs: [build-documentation, workflow-images, publish-packages-nuget-org]
+    needs: [build-documentation, workflow-images]
     permissions:
       # Both required by actions/deploy-pages
       pages: write
@@ -309,7 +273,7 @@ jobs:
     environment:
       # Intentionally not using the "default" github-pages environment as it's not compatible with this workflow
       name: documentation-website
-      url: ${{steps.publish.outputs.page_url}}
+      url: ${{ steps.publish.outputs.page_url || format('https://{0}.github.io/{1}/', github.repository_owner, github.event.repository.name) }}
     # Only run if the workflow isn't dying and build-documentation was successful and either A) we're releasing or B) we have continuous deployment enabled
     if: |
       !cancelled() && !failure() && needs.build-documentation.result == 'success'
