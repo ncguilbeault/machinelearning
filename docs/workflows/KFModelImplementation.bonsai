@@ -15,8 +15,8 @@
       <Expression xsi:type="SubscribeSubject">
         <Name>PythonEngine</Name>
       </Expression>
-      <Expression xsi:type="IncludeWorkflow" Path="Bonsai.ML.LinearDynamicalSystems:LoadLDSModule.bonsai" />
-      <Expression xsi:type="IncludeWorkflow" Path="Bonsai.ML.LinearDynamicalSystems:Kinematics.CreateKFModel.bonsai">
+      <Expression xsi:type="IncludeWorkflow" Path="Bonsai.ML.Lds.Python:LoadLDSModule.bonsai" />
+      <Expression xsi:type="IncludeWorkflow" Path="Bonsai.ML.Lds.Python:Kinematics.CreateKFModel.bonsai">
         <Name>model</Name>
         <Fps>60</Fps>
         <Pos_x0>0</Pos_x0>
@@ -33,14 +33,14 @@
       <Expression xsi:type="SubscribeSubject">
         <Name>BehaviorData</Name>
       </Expression>
-      <Expression xsi:type="IncludeWorkflow" Path="Bonsai.ML.LinearDynamicalSystems:Kinematics.CreateObservation2D.bonsai" />
+      <Expression xsi:type="IncludeWorkflow" Path="Bonsai.ML.Lds.Python:Kinematics.CreateObservation2D.bonsai" />
       <Expression xsi:type="rx:BehaviorSubject">
         <Name>Observation</Name>
       </Expression>
       <Expression xsi:type="SubscribeSubject">
         <Name>Observation</Name>
       </Expression>
-      <Expression xsi:type="IncludeWorkflow" Path="Bonsai.ML.LinearDynamicalSystems:Kinematics.PerformInference.bonsai">
+      <Expression xsi:type="IncludeWorkflow" Path="Bonsai.ML.Lds.Python:Kinematics.PerformInference.bonsai">
         <Name>model</Name>
       </Expression>
       <Expression xsi:type="rx:BehaviorSubject">
