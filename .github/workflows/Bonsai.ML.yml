@@ -12,13 +12,8 @@
 # =======================================================================================================================================================================
 name: Bonsai.ML
 on:
-  push:
-    # This prevents tag pushes from triggering this workflow
-    branches: ['**']
-  pull_request:
   release:
-    types: [published]
-  workflow_dispatch:
+    types: [prereleased, published]
 env:
   DOTNET_NOLOGO: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
