@@ -15,7 +15,7 @@ name: Bonsai.ML
 on:
   push:
     # This prevents tag pushes from triggering this workflow
-    branches: ['**']
+    branches: ["**"]
   pull_request:
   release:
     types: [published]
@@ -45,7 +45,7 @@ jobs:
           - name: Linux x64
             os: ubuntu-22.04
             rid: linux-x64
-        configuration: ['debug', 'release']
+        configuration: ["debug", "release"]
         include:
           - platform:
               rid: win-x64
@@ -189,9 +189,9 @@ jobs:
 
       # ----------------------------------------------------------------------- Set up Bonsai environments
       - name: Set up Bonsai environments
-        uses: glopesdev/setup-bonsai@inject-packages-fallback
+        uses: glopesdev/setup-bonsai@main
         with:
-          environment-paths: '**/.bonsai/'
+          environment-paths: "**/.bonsai/"
           inject-packages: artifacts/packages/*.nupkg
 
       # ----------------------------------------------------------------------- Render
@@ -289,7 +289,6 @@ jobs:
           # This is a workaround for https://github.com/NuGet/Home/issues/9775
           DOTNET_SYSTEM_NET_HTTP_USESOCKETSHTTPHANDLER: 0
 
-
   # =====================================================================================================================================================================
   # Publish documentation
   #  ___      _    _ _    _         _                            _        _   _
@@ -335,7 +334,7 @@ jobs:
       - name: Upload final documentation website artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: "."
 
       # ----------------------------------------------------------------------- Publish to GitHub Pages
       - name: Publish to GitHub Pages
