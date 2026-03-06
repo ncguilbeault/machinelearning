@@ -189,7 +189,7 @@ jobs:
 
       # ----------------------------------------------------------------------- Set up Bonsai environments
       - name: Set up Bonsai environments
-        uses: glopesdev/setup-bonsai@main
+        uses: ncguilbeault/setup-bonsai@main
         with:
           environment-paths: "**/.bonsai/"
           inject-packages: artifacts/packages/*.nupkg
