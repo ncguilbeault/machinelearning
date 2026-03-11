@@ -20,5 +20,5 @@
 - name: Torch
 - name: Overview
   href: Torch/torch-overview.md
-- name: Lds.Torch
-  href: Lds.Torch/lds-torch-overview.md
+- name: Linear Dynamical Systems
+  href: Torch/lds-torch-overview.md
