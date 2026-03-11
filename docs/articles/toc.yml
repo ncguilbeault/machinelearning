@@ -1,24 +1,30 @@
 - name: Introduction
   href: ../index.md
-- name: LinearDynamicalSystems
-- name: Overview
-  href: LinearDynamicalSystems/lds-overview.md
-- name: Installing on Windows
-  href: LinearDynamicalSystems/lds-installation-guide-windows.md
-- name: Installing on Linux
-  href: LinearDynamicalSystems/lds-installation-guide-linux.md
-- name: Getting Started
-  href: LinearDynamicalSystems/lds-getting-started.md
-- name: HiddenMarkovModels
-- name: Overview
-  href: HiddenMarkovModels/hmm-overview.md
-- name: Getting Started
-  href: HiddenMarkovModels/hmm-getting-started.md
-- name: PointProcessDecoder
-- name: Overview
-  href: PointProcessDecoder/ppd-overview.md
-- name: Torch
-- name: Overview
-  href: Torch/torch-overview.md
-- name: Linear Dynamical Systems
-  href: Torch/lds-torch-overview.md
+- name: Developer Guide
+  href: developer-guide.md
+- name: Documentation Guide
+  href: documentation-guide.md
+- name: Packages
+  items:
+    - name: LinearDynamicalSystems
+    - name: Overview
+      href: LinearDynamicalSystems/lds-overview.md
+    - name: Installing on Windows
+      href: LinearDynamicalSystems/lds-installation-guide-windows.md
+    - name: Installing on Linux
+      href: LinearDynamicalSystems/lds-installation-guide-linux.md
+    - name: Getting Started
+      href: LinearDynamicalSystems/lds-getting-started.md
+    - name: HiddenMarkovModels
+    - name: Overview
+      href: HiddenMarkovModels/hmm-overview.md
+    - name: Getting Started
+      href: HiddenMarkovModels/hmm-getting-started.md
+    - name: PointProcessDecoder
+    - name: Overview
+      href: PointProcessDecoder/ppd-overview.md
+    - name: Torch
+    - name: Overview
+      href: Torch/torch-overview.md
+    - name: Linear Dynamical Systems
+      href: Torch/lds-torch-overview.md
