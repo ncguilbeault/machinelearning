@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Reactive.Linq;
 using static TorchSharp.torch;
@@ -11,7 +11,7 @@ namespace Bonsai.ML.Torch.LinearAlgebra;
 [Combinator]
 [Description("Computes the solution to the least squares and least norm problems for a full rank matrix A of size m*n and a matrix B of size m*k.")]
 [WorkflowElementCategory(ElementCategory.Transform)]
-public class LeastSquaresSolve
+public class LeastSquares
 {
     /// <summary>
     /// Computes the solution to the least squares and least norm problems for a full rank matrix A of size m*n and a matrix B of size m*k.
