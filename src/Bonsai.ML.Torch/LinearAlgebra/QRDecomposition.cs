@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Reactive.Linq;
 using static TorchSharp.torch;
@@ -29,22 +29,4 @@ public class QRDecomposition
     {
         return source.Select(tensor => new QRDecompositionResult(qr(tensor, mode: Mode)));
     }
-
-    /// <summary>
-    /// Represents the result of a QR decomposition.
-    /// </summary>
-    /// <param name="result"></param>
-    public readonly struct QRDecompositionResult((Tensor Q, Tensor R) result)
-    {
-        /// <summary>
-        /// Gets the orthogonal matrix Q.
-        /// </summary>
-        public Tensor Q => result.Q;
-
-        /// <summary>
-        /// Gets the upper triangular matrix R.
-        /// </summary>
-        public Tensor R => result.R;
-    }
-
 }

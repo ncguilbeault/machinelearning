@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Reactive.Linq;
 using static TorchSharp.torch;
@@ -21,22 +21,5 @@ public class EigenvalueDecomposition
     public IObservable<EigenDecompositionResult> Process(IObservable<Tensor> source)
     {
         return source.Select(tensor => new EigenDecompositionResult(linalg.eig(tensor)));
-    }
-
-    /// <summary>
-    /// Represents the result of an eigenvalue decomposition.
-    /// </summary>
-    /// <param name="result">The tuple containing the eigenvalues and eigenvectors.</param>
-    public readonly struct EigenDecompositionResult((Tensor eigenvalues, Tensor eigenvectors) result)
-    {
-        /// <summary>
-        /// Gets the eigenvalues of the decomposition.
-        /// </summary>
-        public Tensor Eigenvalues => result.eigenvalues;
-
-        /// <summary>
-        /// Gets the eigenvectors of the decomposition.
-        /// </summary>
-        public Tensor Eigenvectors => result.eigenvectors;
     }
 }

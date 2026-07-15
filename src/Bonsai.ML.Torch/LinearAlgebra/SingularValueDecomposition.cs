@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Reactive.Linq;
 using static TorchSharp.torch;
@@ -27,31 +27,5 @@ public class SingularValueDecomposition
     public IObservable<SingularValueDecompositionResult> Process(IObservable<Tensor> source)
     {
         return source.Select(tensor => new SingularValueDecompositionResult(linalg.svd(tensor, fullMatrices: FullMatrices)));
-    }
-
-    /// <summary>
-    /// Represents the result of a singular value decomposition.
-    /// </summary>
-    /// <param name="result"></param>
-    public readonly struct SingularValueDecompositionResult((
-        Tensor u,
-        Tensor s,
-        Tensor vh
-    ) result)
-    {
-        /// <summary>
-        /// The U tensor.
-        /// </summary>
-        public Tensor U => result.u;
-
-        /// <summary>
-        /// The singular values.
-        /// </summary>
-        public Tensor S => result.s;
-
-        /// <summary>
-        /// The Vh tensor.
-        /// </summary>
-        public Tensor Vh => result.vh;
     }
 }
