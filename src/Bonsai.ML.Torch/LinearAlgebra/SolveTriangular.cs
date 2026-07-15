@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Reactive.Linq;
 using static TorchSharp.torch;
@@ -12,7 +12,7 @@ namespace Bonsai.ML.Torch.LinearAlgebra;
 [Combinator]
 [Description("Computes the solution to a triangular system of linear equations with a unique solution.")]
 [WorkflowElementCategory(ElementCategory.Transform)]
-public class TriangularSolve
+public class SolveTriangular
 {
     /// <summary>
     /// Gets or sets a value indicating whether the first matrix is upper triangular.
