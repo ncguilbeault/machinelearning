@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Reactive.Linq;
 using static TorchSharp.torch;
@@ -19,28 +19,28 @@ public class Unfold
     /// The size of the sliding blocks.
     /// </summary>
     [Description("The size of the sliding blocks.")]
-    [TypeConverter(typeof(ValueTupleConverter<long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long) KernelSize { get; set; }
 
     /// <summary>
     /// The stride of elements within the neighborhood.
     /// </summary>
     [Description("The stride of elements within the neighborhood.")]
-    [TypeConverter(typeof(NullableValueTupleConverter<long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long)? Dilation { get; set; } = null;
 
     /// <summary>
     /// The implicit zero-padding to be added on both sides of input.
     /// </summary>
     [Description("The implicit zero-padding to be added on both sides of input.")]
-    [TypeConverter(typeof(NullableValueTupleConverter<long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long)? Padding { get; set; } = null;
 
     /// <summary>
     /// The stride of the sliding blocks in the input tensor.
     /// </summary>
     [Description("The stride of the sliding blocks in the input tensor.")]
-    [TypeConverter(typeof(NullableValueTupleConverter<long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long)? Stride { get; set; } = null;
 
     /// <summary>

@@ -19,21 +19,21 @@ public class FractionalMaxPool2D
     /// The size of the window to take a max over.
     /// </summary>
     [Description("The size of the window to take a max over.")]
-    [TypeConverter(typeof(ValueTupleConverter<long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long) KernelSize { get; set; }
 
     /// <summary>
     /// The output size.
     /// </summary>
     [Description("The output size.")]
-    [TypeConverter(typeof(NullableValueTupleConverter<long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long)? OutputSize { get; set; } = null;
 
     /// <summary>
     /// Can be used to specify the output size as a ratio of the input size.
     /// </summary>
     [Description("Can be used to specify the output size as a ratio of the input size.")]
-    [TypeConverter(typeof(NullableValueTupleConverter<long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long)? OutputRatio { get; set; } = null;
 
     /// <summary>

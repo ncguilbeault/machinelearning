@@ -19,28 +19,28 @@ public class MaxPool2D
     /// The size of the window to take a max over.
     /// </summary>
     [Description("The size of the window to take a max over.")]
-    [TypeConverter(typeof(ValueTupleConverter<long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long) KernelSize { get; set; }
 
     /// <summary>
     /// The stride of the window.
     /// </summary>
     [Description("The stride of the window.")]
-    [TypeConverter(typeof(NullableValueTupleConverter<long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long)? Stride { get; set; } = null;
 
     /// <summary>
     /// The implicit negative infinity padding to be added on both sides.
     /// </summary>
     [Description("The implicit negative infinity padding to be added on both sides.")]
-    [TypeConverter(typeof(NullableValueTupleConverter<long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long)? Padding { get; set; } = null;
 
     /// <summary>
     /// The spacing between kernel elements.
     /// </summary>
     [Description("The spacing between kernel elements.")]
-    [TypeConverter(typeof(NullableValueTupleConverter<long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long)? Dilation { get; set; } = null;
 
     /// <summary>

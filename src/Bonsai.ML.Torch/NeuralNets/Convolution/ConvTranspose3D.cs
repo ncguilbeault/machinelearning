@@ -33,35 +33,35 @@ public class ConvTranspose3D
     /// The size of the convolution kernel.
     /// </summary>
     [Description("The size of the convolution kernel.")]
-    [TypeConverter(typeof(ValueTupleConverter<long, long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long, long) KernelSize { get; set; }
 
     /// <summary>
     /// The stride of the convolution.
     /// </summary>
     [Description("The stride of the convolution.")]
-    [TypeConverter(typeof(NullableValueTupleConverter<long, long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long, long)? Stride { get; set; } = null;
 
     /// <summary>
     /// The zero-padding added to both sides of each dimension in the input.
     /// </summary>
     [Description("The zero-padding added to both sides of each dimension in the input.")]
-    [TypeConverter(typeof(NullableValueTupleConverter<long, long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long, long)? Padding { get; set; } = null;
 
     /// <summary>
     /// The additional size added to one side of each dimension in the output shape.
     /// </summary>
     [Description("The additional size added to one side of each dimension in the output shape.")]
-    [TypeConverter(typeof(NullableValueTupleConverter<long, long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long, long)? OutputPadding { get; set; } = null;
 
     /// <summary>
     /// The spacing between kernel elements.
     /// </summary>
     [Description("The spacing between kernel elements.")]
-    [TypeConverter(typeof(NullableValueTupleConverter<long, long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long, long)? Dilation { get; set; } = null;
 
     /// <summary>

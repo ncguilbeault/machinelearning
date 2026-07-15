@@ -33,28 +33,28 @@ public class Conv2D
     /// The size of the convolution kernel.
     /// </summary>
     [Description("The size of the convolution kernel.")]
-    [TypeConverter(typeof(ValueTupleConverter<long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long) KernelSize { get; set; }
 
     /// <summary>
     /// The stride of the convolution.
     /// </summary>
     [Description("The stride of the convolution.")]
-    [TypeConverter(typeof(NullableValueTupleConverter<long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long)? Stride { get; set; } = null;
 
     /// <summary>
     /// The padding added to all four sides of the input.
     /// </summary>
     [Description("The padding added to all four sides of the input.")]
-    [TypeConverter(typeof(NullableValueTupleConverter<long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long)? Padding { get; set; } = null;
 
     /// <summary>
     /// The spacing between kernel elements.
     /// </summary>
     [Description("The spacing between kernel elements.")]
-    [TypeConverter(typeof(NullableValueTupleConverter<long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long)? Dilation { get; set; } = null;
 
     /// <summary>

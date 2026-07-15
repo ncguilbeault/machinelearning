@@ -19,7 +19,7 @@ public class AdaptiveAvgPool3D
     /// The output size.
     /// </summary>
     [Description("The output size.")]
-    [TypeConverter(typeof(ValueTupleConverter<long, long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long, long) OutputSize { get; set; }
 
     /// <summary>

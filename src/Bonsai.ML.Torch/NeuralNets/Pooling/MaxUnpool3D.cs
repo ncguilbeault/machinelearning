@@ -23,21 +23,21 @@ public class MaxUnpool3D
     /// The size of the max pooling window.
     /// </summary>
     [Description("The size of the max pooling window.")]
-    [TypeConverter(typeof(ValueTupleConverter<long, long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long, long) KernelSize { get; set; }
 
     /// <summary>
     /// The stride of the max pooling window.
     /// </summary>
     [Description("The stride of the max pooling window.")]
-    [TypeConverter(typeof(NullableValueTupleConverter<long, long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long, long)? Stride { get; set; } = null;
 
     /// <summary>
     /// The padding that was added to the input.
     /// </summary>
     [Description("The padding that was added to the input.")]
-    [TypeConverter(typeof(NullableValueTupleConverter<long, long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long, long)? Padding { get; set; } = null;
 
     /// <summary>

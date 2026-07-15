@@ -19,7 +19,7 @@ public class ConstantPad2D
     /// The size of the padding.
     /// </summary>
     [Description("The size of the padding.")]
-    [TypeConverter(typeof(ValueTupleConverter<long, long, long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long, long, long) PaddingSize { get; set; }
 
     /// <summary>

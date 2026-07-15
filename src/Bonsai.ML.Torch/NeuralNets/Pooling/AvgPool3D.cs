@@ -23,21 +23,21 @@ public class AvgPool3D
     /// The size of the window.
     /// </summary>
     [Description("The size of the window.")]
-    [TypeConverter(typeof(ValueTupleConverter<long, long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long, long) KernelSize { get; set; }
 
     /// <summary>
     /// The stride of the window.
     /// </summary>
     [Description("The stride of the window.")]
-    [TypeConverter(typeof(NullableValueTupleConverter<long, long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long, long)? Stride { get; set; } = null;
 
     /// <summary>
     /// The implicit zero padding to be added on all three sides.
     /// </summary>
     [Description("The implicit zero padding to be added on all three sides.")]
-    [TypeConverter(typeof(NullableValueTupleConverter<long, long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long, long)? Padding { get; set; } = null;
 
     /// <summary>

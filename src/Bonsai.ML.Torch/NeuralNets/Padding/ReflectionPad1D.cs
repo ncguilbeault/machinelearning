@@ -19,7 +19,7 @@ public class ReflectionPad1D
     /// The size of the padding.
     /// </summary>
     [Description("The size of the padding.")]
-    [TypeConverter(typeof(ValueTupleConverter<long, long>))]
+    [TypeConverter(typeof(NumericRecordConverter))]
     public (long, long) PaddingSize { get; set; }
 
     /// <summary>
