@@ -8,9 +8,9 @@ namespace Bonsai.ML.Torch.NeuralNets;
 /// </summary>
 [XmlInclude(typeof(Dropout.AlphaDropout))]
 [XmlInclude(typeof(Dropout.Dropout))]
-[XmlInclude(typeof(Dropout.Dropout1d))]
-[XmlInclude(typeof(Dropout.Dropout2d))]
-[XmlInclude(typeof(Dropout.Dropout3d))]
+[XmlInclude(typeof(Dropout.Dropout1D))]
+[XmlInclude(typeof(Dropout.Dropout2D))]
+[XmlInclude(typeof(Dropout.Dropout3D))]
 [XmlInclude(typeof(Dropout.FeatureAlphaDropout))]
 [DefaultProperty(nameof(DropoutModule))]
 [Combinator]

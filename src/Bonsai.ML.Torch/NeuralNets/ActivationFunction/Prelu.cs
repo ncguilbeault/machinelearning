@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Reactive.Linq;
 using System.Xml.Serialization;
@@ -14,7 +14,6 @@ namespace Bonsai.ML.Torch.NeuralNets.ActivationFunction;
 /// See <see href="https://pytorch.org/docs/stable/generated/torch.nn.PReLU.html"/> for more information.
 /// </remarks>
 [Description("Creates a parametric rectified linear unit (PReLU) activation function.")]
-[DisplayName("PReLU")]
 public class Prelu
 {
     /// <summary>

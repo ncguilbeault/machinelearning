@@ -6,13 +6,13 @@ namespace Bonsai.ML.Torch.NeuralNets;
 /// <summary>
 /// Represents an operator that creates a normalization module.
 /// </summary>
-[XmlInclude(typeof(Normalization.BatchNorm1d))]
-[XmlInclude(typeof(Normalization.BatchNorm2d))]
-[XmlInclude(typeof(Normalization.BatchNorm3d))]
+[XmlInclude(typeof(Normalization.BatchNorm1D))]
+[XmlInclude(typeof(Normalization.BatchNorm2D))]
+[XmlInclude(typeof(Normalization.BatchNorm3D))]
 [XmlInclude(typeof(Normalization.GroupNorm))]
-[XmlInclude(typeof(Normalization.InstanceNorm1d))]
-[XmlInclude(typeof(Normalization.InstanceNorm2d))]
-[XmlInclude(typeof(Normalization.InstanceNorm3d))]
+[XmlInclude(typeof(Normalization.InstanceNorm1D))]
+[XmlInclude(typeof(Normalization.InstanceNorm2D))]
+[XmlInclude(typeof(Normalization.InstanceNorm3D))]
 [XmlInclude(typeof(Normalization.LayerNorm))]
 [XmlInclude(typeof(Normalization.LocalResponseNorm))]
 [DefaultProperty(nameof(NormalizationModule))]
@@ -28,7 +28,7 @@ public class NormalizationModuleBuilder : ModuleCombinatorBuilder, INamedElement
     /// </summary>
     public NormalizationModuleBuilder()
     {
-        Module = new Normalization.BatchNorm1d();
+        Module = new Normalization.BatchNorm1D();
     }
 
     /// <summary>

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Reactive.Linq;
 using static TorchSharp.torch;
@@ -13,7 +13,6 @@ namespace Bonsai.ML.Torch.NeuralNets.ActivationFunction;
 /// See <see href="https://pytorch.org/docs/stable/generated/torch.nn.CELU.html"/> for more information.
 /// </remarks>
 [Description("Creates a continuously differentiable exponential linear unit (CELU) activation function.")]
-[DisplayName("CELU")]
 public class Celu
 {
     /// <summary>

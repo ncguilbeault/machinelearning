@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Reactive.Linq;
 using static TorchSharp.torch;
@@ -13,7 +13,6 @@ namespace Bonsai.ML.Torch.NeuralNets.Loss;
 /// See <see href="https://pytorch.org/docs/stable/generated/torch.nn.L1Loss.html"/> for more information.
 /// </remarks>
 [Description("Creates an L1 loss (L1Loss) module, also known as mean absolute error (MAE).")]
-[DisplayName("L1")]
 public class MeanAbsoluteError
 {
     /// <summary>

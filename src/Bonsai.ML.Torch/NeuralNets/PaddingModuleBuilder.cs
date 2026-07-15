@@ -6,16 +6,16 @@ namespace Bonsai.ML.Torch.NeuralNets;
 /// <summary>
 /// Represents an operator that creates a padding module.
 /// </summary>
-[XmlInclude(typeof(Padding.ConstantPad1d))]
-[XmlInclude(typeof(Padding.ConstantPad2d))]
-[XmlInclude(typeof(Padding.ConstantPad3d))]
-[XmlInclude(typeof(Padding.ReflectionPad1d))]
-[XmlInclude(typeof(Padding.ReflectionPad2d))]
-[XmlInclude(typeof(Padding.ReflectionPad3d))]
-[XmlInclude(typeof(Padding.ReplicationPad1d))]
-[XmlInclude(typeof(Padding.ReplicationPad2d))]
-[XmlInclude(typeof(Padding.ReplicationPad3d))]
-[XmlInclude(typeof(Padding.ZeroPad2d))]
+[XmlInclude(typeof(Padding.ConstantPad1D))]
+[XmlInclude(typeof(Padding.ConstantPad2D))]
+[XmlInclude(typeof(Padding.ConstantPad3D))]
+[XmlInclude(typeof(Padding.ReflectionPad1D))]
+[XmlInclude(typeof(Padding.ReflectionPad2D))]
+[XmlInclude(typeof(Padding.ReflectionPad3D))]
+[XmlInclude(typeof(Padding.ReplicationPad1D))]
+[XmlInclude(typeof(Padding.ReplicationPad2D))]
+[XmlInclude(typeof(Padding.ReplicationPad3D))]
+[XmlInclude(typeof(Padding.ZeroPad2D))]
 [DefaultProperty(nameof(PaddingModule))]
 [Combinator]
 [Description("Creates a padding module.")]
@@ -29,7 +29,7 @@ public class PaddingModuleBuilder : ModuleCombinatorBuilder, INamedElement
     /// </summary>
     public PaddingModuleBuilder()
     {
-        Module = new Padding.ConstantPad1d();
+        Module = new Padding.ConstantPad1D();
     }
 
     /// <summary>

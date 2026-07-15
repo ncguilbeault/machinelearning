@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Reactive.Linq;
 using static TorchSharp.torch;
@@ -13,7 +13,6 @@ namespace Bonsai.ML.Torch.NeuralNets.Loss;
 /// See <see href="https://pytorch.org/docs/stable/generated/torch.nn.GaussianNLLLoss.html"/> for more information.
 /// </remarks>
 [Description("Creates a gaussian negative log likelihood (GaussianNLL) loss module.")]
-[DisplayName("GaussianNLL")]
 public class GaussianNegativeLogLikelihood
 {
     /// <summary>

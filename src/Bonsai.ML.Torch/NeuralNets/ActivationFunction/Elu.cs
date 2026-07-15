@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Reactive.Linq;
 using static TorchSharp.torch;
@@ -13,7 +13,6 @@ namespace Bonsai.ML.Torch.NeuralNets.ActivationFunction;
 /// See <see href="https://pytorch.org/docs/stable/generated/torch.nn.ELU.html"/> for more information.
 /// </remarks>
 [Description("Creates an exponential linear unit (ELU) activation function.")]
-[DisplayName("ELU")]
 public class Elu
 {
     /// <summary>

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Reactive.Linq;
 using System.Xml.Serialization;
@@ -15,7 +15,6 @@ namespace Bonsai.ML.Torch.NeuralNets.Loss;
 /// </remarks>
 [Description("Creates a binary cross entropy (BCE) loss module.")]
 [TypeConverter(typeof(TensorOperatorConverter))]
-[DisplayName("BCE")]
 public class BinaryCrossEntropy : IScalarTypeProvider
 {
     /// <summary>

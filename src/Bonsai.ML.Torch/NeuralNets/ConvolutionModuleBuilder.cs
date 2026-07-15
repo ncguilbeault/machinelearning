@@ -6,12 +6,12 @@ namespace Bonsai.ML.Torch.NeuralNets;
 /// <summary>
 /// Represents an operator that creates a torch module for convolution operations.
 /// </summary>
-[XmlInclude(typeof(Convolution.Conv1d))]
-[XmlInclude(typeof(Convolution.Conv2d))]
-[XmlInclude(typeof(Convolution.Conv3d))]
-[XmlInclude(typeof(Convolution.ConvTranspose1d))]
-[XmlInclude(typeof(Convolution.ConvTranspose2d))]
-[XmlInclude(typeof(Convolution.ConvTranspose3d))]
+[XmlInclude(typeof(Convolution.Conv1D))]
+[XmlInclude(typeof(Convolution.Conv2D))]
+[XmlInclude(typeof(Convolution.Conv3D))]
+[XmlInclude(typeof(Convolution.ConvTranspose1D))]
+[XmlInclude(typeof(Convolution.ConvTranspose2D))]
+[XmlInclude(typeof(Convolution.ConvTranspose3D))]
 [XmlInclude(typeof(Convolution.Fold))]
 [XmlInclude(typeof(Convolution.Unfold))]
 [DefaultProperty(nameof(ConvolutionModule))]
@@ -27,7 +27,7 @@ public class ConvolutionModuleBuilder : ModuleCombinatorBuilder, INamedElement
     /// </summary>
     public ConvolutionModuleBuilder()
     {
-        Module = new Convolution.Conv1d();
+        Module = new Convolution.Conv1D();
     }
 
     /// <summary>

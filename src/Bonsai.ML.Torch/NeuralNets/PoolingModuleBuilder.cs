@@ -6,25 +6,25 @@ namespace Bonsai.ML.Torch.NeuralNets;
 /// <summary>
 /// Represents an operator that creates a module for pooling operations.
 /// </summary>
-[XmlInclude(typeof(Pooling.AdaptiveAvgPool1d))]
-[XmlInclude(typeof(Pooling.AdaptiveAvgPool2d))]
-[XmlInclude(typeof(Pooling.AdaptiveAvgPool3d))]
-[XmlInclude(typeof(Pooling.AdaptiveMaxPool1d))]
-[XmlInclude(typeof(Pooling.AdaptiveMaxPool2d))]
-[XmlInclude(typeof(Pooling.AdaptiveMaxPool3d))]
-[XmlInclude(typeof(Pooling.AvgPool1d))]
-[XmlInclude(typeof(Pooling.AvgPool2d))]
-[XmlInclude(typeof(Pooling.AvgPool3d))]
-[XmlInclude(typeof(Pooling.FractionalMaxPool2d))]
-[XmlInclude(typeof(Pooling.FractionalMaxPool3d))]
-[XmlInclude(typeof(Pooling.LPPool1d))]
-[XmlInclude(typeof(Pooling.LPPool2d))]
-[XmlInclude(typeof(Pooling.MaxPool1d))]
-[XmlInclude(typeof(Pooling.MaxPool2d))]
-[XmlInclude(typeof(Pooling.MaxPool3d))]
-[XmlInclude(typeof(Pooling.MaxUnpool1d))]
-[XmlInclude(typeof(Pooling.MaxUnpool2d))]
-[XmlInclude(typeof(Pooling.MaxUnpool3d))]
+[XmlInclude(typeof(Pooling.AdaptiveAvgPool1D))]
+[XmlInclude(typeof(Pooling.AdaptiveAvgPool2D))]
+[XmlInclude(typeof(Pooling.AdaptiveAvgPool3D))]
+[XmlInclude(typeof(Pooling.AdaptiveMaxPool1D))]
+[XmlInclude(typeof(Pooling.AdaptiveMaxPool2D))]
+[XmlInclude(typeof(Pooling.AdaptiveMaxPool3D))]
+[XmlInclude(typeof(Pooling.AvgPool1D))]
+[XmlInclude(typeof(Pooling.AvgPool2D))]
+[XmlInclude(typeof(Pooling.AvgPool3D))]
+[XmlInclude(typeof(Pooling.FractionalMaxPool2D))]
+[XmlInclude(typeof(Pooling.FractionalMaxPool3D))]
+[XmlInclude(typeof(Pooling.LPPool1D))]
+[XmlInclude(typeof(Pooling.LPPool2D))]
+[XmlInclude(typeof(Pooling.MaxPool1D))]
+[XmlInclude(typeof(Pooling.MaxPool2D))]
+[XmlInclude(typeof(Pooling.MaxPool3D))]
+[XmlInclude(typeof(Pooling.MaxUnpool1D))]
+[XmlInclude(typeof(Pooling.MaxUnpool2D))]
+[XmlInclude(typeof(Pooling.MaxUnpool3D))]
 [DefaultProperty(nameof(PoolingModule))]
 [Combinator]
 [Description("Creates a module for pooling operations.")]
@@ -38,7 +38,7 @@ public class PoolingModuleBuilder : ModuleCombinatorBuilder, INamedElement
     /// </summary>
     public PoolingModuleBuilder()
     {
-        Module = new Pooling.AdaptiveAvgPool1d();
+        Module = new Pooling.AdaptiveAvgPool1D();
     }
 
     /// <summary>
