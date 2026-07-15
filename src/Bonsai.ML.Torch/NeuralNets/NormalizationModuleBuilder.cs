@@ -16,7 +16,6 @@ namespace Bonsai.ML.Torch.NeuralNets;
 [XmlInclude(typeof(Normalization.LayerNorm))]
 [XmlInclude(typeof(Normalization.LocalResponseNorm))]
 [DefaultProperty(nameof(NormalizationModule))]
-[Combinator]
 [Description("Creates a normalization module.")]
 [WorkflowElementCategory(ElementCategory.Source)]
 public class NormalizationModuleBuilder : ModuleCombinatorBuilder, INamedElement

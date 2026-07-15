@@ -36,7 +36,6 @@ namespace Bonsai.ML.Torch.NeuralNets;
 [XmlInclude(typeof(ActivationFunction.Tanhshrink))]
 [XmlInclude(typeof(ActivationFunction.Threshold))]
 [DefaultProperty(nameof(ActivationFunction))]
-[Combinator]
 [Description("Creates an activation function.")]
 [WorkflowElementCategory(ElementCategory.Source)]
 public class ActivationFunctionBuilder : ModuleCombinatorBuilder, INamedElement

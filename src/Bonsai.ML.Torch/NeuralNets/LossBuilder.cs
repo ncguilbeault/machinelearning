@@ -27,7 +27,6 @@ namespace Bonsai.ML.Torch.NeuralNets;
 [XmlInclude(typeof(Loss.SoftMargin))]
 [XmlInclude(typeof(Loss.TripletMargin))]
 [DefaultProperty(nameof(LossModule))]
-[Combinator]
 [Description("Creates a loss module.")]
 [WorkflowElementCategory(ElementCategory.Source)]
 public class LossBuilder : ModuleCombinatorBuilder, INamedElement

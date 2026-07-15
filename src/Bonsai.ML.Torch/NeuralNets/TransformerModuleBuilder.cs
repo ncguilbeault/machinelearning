@@ -12,7 +12,6 @@ namespace Bonsai.ML.Torch.NeuralNets;
 [XmlInclude(typeof(Transformer.TransformerEncoder))]
 [XmlInclude(typeof(Transformer.TransformerEncoderLayer))]
 [DefaultProperty(nameof(TransformerModule))]
-[Combinator]
 [Description("Creates a transformer module.")]
 [WorkflowElementCategory(ElementCategory.Source)]
 public class TransformerModuleBuilder : ModuleCombinatorBuilder, INamedElement

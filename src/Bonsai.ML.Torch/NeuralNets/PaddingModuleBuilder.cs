@@ -17,7 +17,6 @@ namespace Bonsai.ML.Torch.NeuralNets;
 [XmlInclude(typeof(Padding.ReplicationPad3D))]
 [XmlInclude(typeof(Padding.ZeroPad2D))]
 [DefaultProperty(nameof(PaddingModule))]
-[Combinator]
 [Description("Creates a padding module.")]
 [WorkflowElementCategory(ElementCategory.Source)]
 public class PaddingModuleBuilder : ModuleCombinatorBuilder, INamedElement

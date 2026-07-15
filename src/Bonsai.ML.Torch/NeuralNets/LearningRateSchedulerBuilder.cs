@@ -16,7 +16,6 @@ namespace Bonsai.ML.Torch.NeuralNets;
 [XmlInclude(typeof(LearningRateScheduler.ReduceOnPlateau))]
 [XmlInclude(typeof(LearningRateScheduler.Step))]
 [DefaultProperty(nameof(LearningRateScheduler))]
-[Combinator]
 [Description("Creates a learning rate scheduler.")]
 [WorkflowElementCategory(ElementCategory.Transform)]
 public class LearningRateSchedulerBuilder : ModuleCombinatorBuilder, INamedElement

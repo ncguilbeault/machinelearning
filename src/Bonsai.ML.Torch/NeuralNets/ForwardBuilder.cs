@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Collections.Generic;
@@ -15,7 +15,6 @@ namespace Bonsai.ML.Torch.NeuralNets;
 /// <summary>
 /// Represents an operator that runs forward inference on the input using the specified module.
 /// </summary>
-[Combinator]
 [Description("Runs forward inference on the input using the specified module.")]
 [WorkflowElementCategory(ElementCategory.Transform)]
 public class ForwardBuilder : SingleArgumentExpressionBuilder

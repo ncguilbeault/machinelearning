@@ -13,7 +13,6 @@ namespace Bonsai.ML.Torch.NeuralNets;
 /// <summary>
 /// Represents an operator that saves a module's state to a file.
 /// </summary>
-[Combinator]
 [Description("Saves a module's state to a file.")]
 [WorkflowElementCategory(ElementCategory.Sink)]
 public class SaveModuleStateBuilder : SingleArgumentExpressionBuilder

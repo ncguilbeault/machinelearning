@@ -17,7 +17,6 @@ namespace Bonsai.ML.Torch.NeuralNets;
 /// <summary>
 /// Represents an operator that loads a module's state from a file.
 /// </summary>
-[Combinator]
 [Description("Loads a module's state from a file.")]
 [WorkflowElementCategory(ElementCategory.Sink)]
 public class LoadModuleStateBuilder : SingleArgumentExpressionBuilder

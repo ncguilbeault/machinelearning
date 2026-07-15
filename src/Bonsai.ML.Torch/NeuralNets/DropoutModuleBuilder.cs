@@ -13,7 +13,6 @@ namespace Bonsai.ML.Torch.NeuralNets;
 [XmlInclude(typeof(Dropout.Dropout3D))]
 [XmlInclude(typeof(Dropout.FeatureAlphaDropout))]
 [DefaultProperty(nameof(DropoutModule))]
-[Combinator]
 [Description("Creates a module for dropout computations.")]
 [WorkflowElementCategory(ElementCategory.Source)]
 public class DropoutModuleBuilder : ModuleCombinatorBuilder, INamedElement

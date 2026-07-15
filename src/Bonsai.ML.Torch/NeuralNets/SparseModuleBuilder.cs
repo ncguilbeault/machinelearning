@@ -11,7 +11,6 @@ namespace Bonsai.ML.Torch.NeuralNets;
 [XmlInclude(typeof(Sparse.EmbeddingBagFromPretrained))]
 [XmlInclude(typeof(Sparse.EmbeddingFromPretrained))]
 [DefaultProperty(nameof(SparseModule))]
-[Combinator]
 [Description("Creates a module for sparsification.")]
 [WorkflowElementCategory(ElementCategory.Source)]
 public class SparseModuleBuilder : ModuleCombinatorBuilder, INamedElement

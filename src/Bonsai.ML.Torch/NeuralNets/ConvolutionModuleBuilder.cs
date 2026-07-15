@@ -15,7 +15,6 @@ namespace Bonsai.ML.Torch.NeuralNets;
 [XmlInclude(typeof(Convolution.Fold))]
 [XmlInclude(typeof(Convolution.Unfold))]
 [DefaultProperty(nameof(ConvolutionModule))]
-[Combinator]
 [Description("Creates a torch module for convolution operations.")]
 [WorkflowElementCategory(ElementCategory.Source)]
 public class ConvolutionModuleBuilder : ModuleCombinatorBuilder, INamedElement

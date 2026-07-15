@@ -10,7 +10,6 @@ namespace Bonsai.ML.Torch.NeuralNets;
 [XmlInclude(typeof(Linear.Identity))]
 [XmlInclude(typeof(Linear.Linear))]
 [DefaultProperty(nameof(LinearModule))]
-[Combinator]
 [Description("Creates a linear module.")]
 [WorkflowElementCategory(ElementCategory.Source)]
 public class LinearModuleBuilder : ModuleCombinatorBuilder, INamedElement

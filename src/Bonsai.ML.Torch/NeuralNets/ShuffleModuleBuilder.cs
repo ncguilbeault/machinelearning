@@ -8,7 +8,6 @@ namespace Bonsai.ML.Torch.NeuralNets;
 /// </summary>
 [XmlInclude(typeof(Shuffle.ChannelShuffle))]
 [DefaultProperty(nameof(ShuffleModule))]
-[Combinator]
 [Description("Creates a module for shuffling input.")]
 [WorkflowElementCategory(ElementCategory.Source)]
 public class ShuffleModuleBuilder : ModuleCombinatorBuilder, INamedElement

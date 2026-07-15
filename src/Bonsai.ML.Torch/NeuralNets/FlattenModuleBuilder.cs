@@ -9,7 +9,6 @@ namespace Bonsai.ML.Torch.NeuralNets;
 [XmlInclude(typeof(Flatten.Flatten))]
 [XmlInclude(typeof(Flatten.Unflatten))]
 [DefaultProperty(nameof(FlattenModule))]
-[Combinator]
 [Description("Creates a module for flattening tensors.")]
 [WorkflowElementCategory(ElementCategory.Source)]
 public class FlattenModuleBuilder : ModuleCombinatorBuilder, INamedElement

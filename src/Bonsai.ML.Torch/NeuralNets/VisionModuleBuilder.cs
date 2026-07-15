@@ -10,7 +10,6 @@ namespace Bonsai.ML.Torch.NeuralNets;
 [XmlInclude(typeof(Vision.PixelUnshuffle))]
 [XmlInclude(typeof(Vision.Upsample))]
 [DefaultProperty(nameof(VisionModule))]
-[Combinator]
 [Description("Creates a module for image processing.")]
 [WorkflowElementCategory(ElementCategory.Source)]
 public class VisionModuleBuilder : ModuleCombinatorBuilder, INamedElement

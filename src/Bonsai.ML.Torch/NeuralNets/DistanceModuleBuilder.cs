@@ -9,7 +9,6 @@ namespace Bonsai.ML.Torch.NeuralNets;
 [XmlInclude(typeof(Distance.CosineSimilarity))]
 [XmlInclude(typeof(Distance.PairwiseDistance))]
 [DefaultProperty(nameof(DistanceModule))]
-[Combinator]
 [Description("Creates a module for distance computations.")]
 [WorkflowElementCategory(ElementCategory.Source)]
 public class DistanceModuleBuilder : ModuleCombinatorBuilder, INamedElement

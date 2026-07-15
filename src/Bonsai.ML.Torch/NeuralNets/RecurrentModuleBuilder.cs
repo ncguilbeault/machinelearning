@@ -13,7 +13,6 @@ namespace Bonsai.ML.Torch.NeuralNets;
 [XmlInclude(typeof(Recurrent.RecurrentNeuralNetwork))]
 [XmlInclude(typeof(Recurrent.RecurrentNeuralNetworkCell))]
 [DefaultProperty(nameof(RecurrentModule))]
-[Combinator]
 [Description("Creates a recurrent neural network module.")]
 [WorkflowElementCategory(ElementCategory.Source)]
 public class RecurrentModuleBuilder : ModuleCombinatorBuilder, INamedElement

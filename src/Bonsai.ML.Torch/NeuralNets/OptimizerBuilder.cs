@@ -17,7 +17,6 @@ namespace Bonsai.ML.Torch.NeuralNets;
 [XmlInclude(typeof(Optimizer.RootMeanSquarePropagation))]
 [XmlInclude(typeof(Optimizer.StochasticGradientDescent))]
 [DefaultProperty(nameof(OptimizerModule))]
-[Combinator]
 [Description("Creates an optimizer.")]
 [WorkflowElementCategory(ElementCategory.Transform)]
 public class OptimizerBuilder : ModuleCombinatorBuilder, INamedElement

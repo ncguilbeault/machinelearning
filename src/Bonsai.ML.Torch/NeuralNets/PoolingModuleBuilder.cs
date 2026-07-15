@@ -26,7 +26,6 @@ namespace Bonsai.ML.Torch.NeuralNets;
 [XmlInclude(typeof(Pooling.MaxUnpool2D))]
 [XmlInclude(typeof(Pooling.MaxUnpool3D))]
 [DefaultProperty(nameof(PoolingModule))]
-[Combinator]
 [Description("Creates a module for pooling operations.")]
 [WorkflowElementCategory(ElementCategory.Source)]
 public class PoolingModuleBuilder : ModuleCombinatorBuilder, INamedElement

@@ -7,7 +7,6 @@ namespace Bonsai.ML.Torch.NeuralNets;
 /// </summary>
 [XmlInclude(typeof(Container.Sequential))]
 [DefaultProperty(nameof(ContainerModule))]
-[Combinator]
 [Description("Creates a sequential container for torch modules.")]
 [WorkflowElementCategory(ElementCategory.Transform)]
 public class ContainerBuilder : ModuleCombinatorBuilder, INamedElement
