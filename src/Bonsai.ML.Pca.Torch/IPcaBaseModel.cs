@@ -8,11 +8,6 @@ namespace Bonsai.ML.Pca.Torch;
 public interface IPcaBaseModel
 {
     /// <summary>
-    /// Gets a value indicating whether the model has been fitted to data.
-    /// </summary>
-    public bool IsFitted { get; }
-
-    /// <summary>
     /// Gets the number of features in the fitted data.
     /// </summary>
     public int NumFeatures { get; }

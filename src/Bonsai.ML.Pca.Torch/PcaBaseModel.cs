@@ -10,9 +10,6 @@ namespace Bonsai.ML.Pca.Torch;
 public abstract class PcaBaseModel : IPcaBaseModel
 {
     /// <inheritdoc/>
-    public bool IsFitted { get; protected set; }
-
-    /// <inheritdoc/>
     public int NumFeatures { get; protected set; } = -1;
 
     /// <inheritdoc/>
@@ -88,7 +85,7 @@ public abstract class PcaBaseModel : IPcaBaseModel
 
     private void CheckFitted()
     {
-        if (!IsFitted)
+        if (NumFeatures < 0)
             throw new InvalidOperationException("Model has not yet been fitted. You should call one of the Fit() or the FitAndTransform() methods first.");
     }
 
