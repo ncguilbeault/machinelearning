@@ -113,7 +113,7 @@ public abstract class PcaBaseModel : IScalarTypeProvider
     {
         CheckFitted();
         CheckDataCompatibility(data);
-        CheckDataFeatures(data);
+        CheckDataComponents(data);
         return data;
     }
 
@@ -141,5 +141,13 @@ public abstract class PcaBaseModel : IScalarTypeProvider
 
         if (d != NumFeatures)
             throw new ArgumentException("The number of features in the data does not match the number of features in the fitted model.", nameof(data));
+    }
+
+    private void CheckDataComponents(Tensor data)
+    {
+        var d = data.size(1);
+
+        if (d != NumComponents)
+            throw new ArgumentException("The number of features in the data does not match the number of components in the fitted model.", nameof(data));
     }
 }

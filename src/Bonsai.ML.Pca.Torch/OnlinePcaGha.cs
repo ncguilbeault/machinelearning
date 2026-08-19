@@ -57,7 +57,7 @@ public class OnlinePcaGha : PcaBaseModel
                 Mean = data.mean([0], keepdim: true);
             else
             {
-                Mean *= SampleCount / (SampleCount + numSamples);
+                Mean *= (double)SampleCount / (SampleCount + numSamples);
                 Mean += data.mean([0], keepdim: true) * numSamples / (SampleCount + numSamples);
             }
 
@@ -67,8 +67,8 @@ public class OnlinePcaGha : PcaBaseModel
             var projection = dataCentered.matmul(Components);
             var hebbianTerm = dataCentered.T.matmul(projection);
             var crossTerm = projection.T.matmul(projection);
-            var lowerTriangular = crossTerm.tril(0);
-            var correlation = Components.matmul(lowerTriangular);
+            var upperTriangular = crossTerm.triu(0);
+            var correlation = Components.matmul(upperTriangular);
             var componentsUpdate = (hebbianTerm - correlation) * (LearningRate / numSamples);
             var weights = Components + componentsUpdate;
             var norms = weights.norm(dim: 0, keepdim: true, p: 2).clamp_min(1e-12);
