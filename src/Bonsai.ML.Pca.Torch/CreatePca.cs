@@ -11,7 +11,7 @@ using Bonsai.Expressions;
 namespace Bonsai.ML.Pca.Torch;
 
 /// <summary>
-/// Creates a PCA model.
+/// Represents an operator that creates a PCA model.
 /// </summary>
 [XmlInclude(typeof(Pca))]
 [XmlInclude(typeof(ProbabilisticPca))]
@@ -32,9 +32,6 @@ public class CreatePca : ZeroArgumentExpressionBuilder, INamedElement, ICustomTy
     /// <summary>
     /// Gets or sets the type of PCA model to create.
     /// </summary>
-    /// <remarks>
-    /// The selected model type is stored in the workflow as the type of the underlying model, so this property is excluded from serialization.
-    /// </remarks>
     [XmlIgnore]
     [RefreshProperties(RefreshProperties.All)]
     [Description("The type of PCA model to create.")]

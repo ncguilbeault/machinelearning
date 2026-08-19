@@ -1,14 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Reactive.Linq;
-using System.Xml.Serialization;
 using static TorchSharp.torch;
-using Bonsai.Expressions;
 
 namespace Bonsai.ML.Pca.Torch;
 
 /// <summary>
-/// Fits the PCA model to the input data.
+/// Represents an operator that fits a PCA model to the input data.
 /// </summary>
 [Combinator]
 [Description("Fits a PCA model to the input data.")]
@@ -21,7 +19,7 @@ public class Fit
     }
 
     /// <summary>
-    /// Fits the PCA model to the input data.
+    /// Fits a PCA model to the input data.
     /// </summary>
     /// <param name="source"></param>
     /// <returns></returns>
@@ -34,7 +32,7 @@ public class Fit
     }
 
     /// <summary>
-    /// Fits the PCA model to the input data.
+    /// Fits a PCA model to the input data.
     /// </summary>
     /// <param name="source"></param>
     /// <returns></returns>

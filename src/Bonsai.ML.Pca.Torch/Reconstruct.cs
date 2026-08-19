@@ -6,10 +6,10 @@ using static TorchSharp.torch;
 namespace Bonsai.ML.Pca.Torch;
 
 /// <summary>
-/// Reconstructs the input data using a PCA model.
+/// Represents an operator that reconstructs the input data from transformed data using a PCA model.
 /// </summary>
 [Combinator]
-[Description("Reconstructs the input data using a PCA model.")]
+[Description("Reconstructs the input data from transformed data using a PCA model.")]
 [WorkflowElementCategory(ElementCategory.Transform)]
 public class Reconstruct
 {
@@ -19,7 +19,7 @@ public class Reconstruct
     }
 
     /// <summary>
-    /// Reconstructs the input data using a PCA model.
+    /// Reconstructs the input data from transformed data using a PCA model.
     /// </summary>
     /// <param name="source"></param>
     /// <returns></returns>
@@ -32,7 +32,7 @@ public class Reconstruct
     }
 
     /// <summary>
-    /// Reconstructs the input data using a PCA model.
+    /// Reconstructs the input from transformed data using a PCA model.
     /// </summary>
     /// <param name="source"></param>
     /// <returns></returns>

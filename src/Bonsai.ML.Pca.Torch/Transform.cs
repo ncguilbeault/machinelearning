@@ -6,10 +6,10 @@ using static TorchSharp.torch;
 namespace Bonsai.ML.Pca.Torch;
 
 /// <summary>
-/// Transforms the input data using a PCA model.
+/// Represents an operator that transforms input data using a PCA model.
 /// </summary>
 [Combinator]
-[Description("Transforms the input data using a PCA model.")]
+[Description("Transforms input data using a PCA model.")]
 [WorkflowElementCategory(ElementCategory.Transform)]
 public class Transform
 {
@@ -19,7 +19,7 @@ public class Transform
     }
 
     /// <summary>
-    /// Transforms the input data using a PCA model.
+    /// Transforms input data using a PCA model.
     /// </summary>
     /// <param name="source"></param>
     /// <returns></returns>
@@ -32,7 +32,7 @@ public class Transform
     }
 
     /// <summary>
-    /// Transforms the input data using a PCA model.
+    /// Transforms input data using a PCA model.
     /// </summary>
     /// <param name="source"></param>
     /// <returns></returns>

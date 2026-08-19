@@ -7,10 +7,8 @@ using static TorchSharp.torch.linalg;
 namespace Bonsai.ML.Pca.Torch;
 
 /// <summary>
-/// Implements an online probabilistic PCA model using the stochastic online EM algorithm.
+/// An online probabilistic PCA model which uses a stochastic online EM algorithm.
 /// </summary>
-[Description("Creates an online probabilistic PCA model.")]
-[WorkflowElementCategory(ElementCategory.Source)]
 public class OnlineProbabilisticPca : PcaBaseModel
 {
     private Tensor _identityComponents = empty(0);

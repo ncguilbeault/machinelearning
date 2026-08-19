@@ -7,10 +7,8 @@ using static TorchSharp.torch.linalg;
 namespace Bonsai.ML.Pca.Torch;
 
 /// <summary>
-/// Represents a probabilistic PCA model.
+/// A probabilistic PCA model.
 /// </summary>
-[Description("Creates a probabilistic PCA model.")]
-[WorkflowElementCategory(ElementCategory.Source)]
 public class ProbabilisticPca : PcaBaseModel
 {
     private Tensor _logConst = log(2 * Math.PI);

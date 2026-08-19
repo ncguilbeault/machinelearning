@@ -8,10 +8,8 @@ using Bonsai.ML.Torch;
 namespace Bonsai.ML.Pca.Torch;
 
 /// <summary>
-/// Represents a standard Principal Component Analysis (PCA) model.
+/// A standard Principal Component Analysis (PCA) model.
 /// </summary>
-[Description("Creates a standard PCA model.")]
-[WorkflowElementCategory(ElementCategory.Source)]
 public class Pca : PcaBaseModel
 {
     /// <summary>

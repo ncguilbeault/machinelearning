@@ -7,10 +7,10 @@ using static TorchSharp.torch;
 namespace Bonsai.ML.Pca.Torch;
 
 /// <summary>
-/// Fits the PCA model to the input data and transforms it.
+/// Represents an operator that fits a PCA model to the input data and transforms it.
 /// </summary>
 [Combinator]
-[Description("Fits a PCA model and transforms the input data.")]
+[Description("Fits a PCA model to the input data and transforms it.")]
 [WorkflowElementCategory(ElementCategory.Transform)]
 public class FitAndTransform
 {
@@ -20,7 +20,7 @@ public class FitAndTransform
     }
 
     /// <summary>
-    /// Fits the PCA model to the input data and transforms it.
+    /// Fits a PCA model to the input data and transforms it.
     /// </summary>
     /// <param name="source"></param>
     /// <returns></returns>
@@ -33,7 +33,7 @@ public class FitAndTransform
     }
 
     /// <summary>
-    /// Fits the PCA model to the input data and transforms it.
+    /// Fits a PCA model to the input data and transforms it.
     /// </summary>
     /// <param name="source"></param>
     /// <returns></returns>

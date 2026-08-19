@@ -5,10 +5,8 @@ using static TorchSharp.torch;
 namespace Bonsai.ML.Pca.Torch;
 
 /// <summary>
-/// Implements streaming/online PCA using the Generalized Hebbian Algorithm (GHA).
+/// A streaming/online PCA model based on the Generalized Hebbian Algorithm (GHA).
 /// </summary>
-[Description("Creates an online PCA model based on the Generalized Hebbian Algorithm.")]
-[WorkflowElementCategory(ElementCategory.Source)]
 public class OnlinePcaGha : PcaBaseModel
 {
     /// <summary>
