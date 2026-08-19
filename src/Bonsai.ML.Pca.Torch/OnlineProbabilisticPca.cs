@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Xml.Serialization;
 using static TorchSharp.torch;
 using static TorchSharp.torch.linalg;
 
@@ -7,6 +9,8 @@ namespace Bonsai.ML.Pca.Torch;
 /// <summary>
 /// Implements an online probabilistic PCA model using the stochastic online EM algorithm.
 /// </summary>
+[Description("Creates an online probabilistic PCA model.")]
+[WorkflowElementCategory(ElementCategory.Source)]
 public class OnlineProbabilisticPca : PcaBaseModel
 {
     private Tensor _identityComponents = empty(0);
@@ -15,146 +19,118 @@ public class OnlineProbabilisticPca : PcaBaseModel
     private Tensor _mz = empty(0); // E[z]
     private Tensor _Czz = empty(0); // E[zz^T]
     private Tensor _sxx = empty(0); // E[||x||^2]
-    private readonly Func<double> UpdateSchedule;
     private int _stepCount = 0;
-    private readonly bool _reorthogonalize = false;
-
-    /// <summary>
-    /// Rho is a constant learning rate parameter.
-    /// </summary>
-    /// <remarks>
-    /// Rho must be in the range (0, 1). Only one of Rho or Kappa should be specified.
-    /// </remarks>
-    public double? Rho { get; private set; }
-
-    /// <summary>
-    /// Kappa is the exponent in the learning rate schedule.
-    /// </summary>
-    /// <remarks>
-    /// Kappa must be in the range (0.5, 1]. Only one
-    /// of Rho or Kappa should be specified.
-    /// </remarks>
-    public double? Kappa { get; private set; }
 
     /// <summary>
     /// Gets the mean of the fitted data.
     /// </summary>
+    [XmlIgnore]
+    [Browsable(false)]
     public Tensor Means { get; private set; } = empty(0);
 
     /// <summary>
     /// Gets the variance of the isotropic Gaussian noise model.
     /// </summary>
+    [XmlIgnore]
+    [Browsable(false)]
     public double Variance { get; private set; }
 
     /// <summary>
-    /// Gets the period for reorthogonalizing the principal components.
+    /// Gets or sets the constant learning rate parameter.
+    /// </summary>
+    /// <remarks>
+    /// Rho must be in the range (0, 1). Only one of Rho or Kappa should be specified.
+    /// </remarks>
+    [Category("ModelParameters")]
+    [Description("The constant learning rate parameter. Only one of Rho or Kappa should be specified.")]
+    public double? Rho { get; set; } = 0.1;
+
+    /// <summary>
+    /// Gets or sets the exponent in the learning rate schedule.
+    /// </summary>
+    /// <remarks>
+    /// Kappa must be in the range (0.5, 1]. Only one
+    /// of Rho or Kappa should be specified.
+    /// </remarks>
+    [Category("ModelParameters")]
+    [Description("The exponent in the learning rate schedule. Only one of Rho or Kappa should be specified.")]
+    public double? Kappa { get; set; }
+
+
+    /// <summary>
+    /// Gets or sets the initial variance of the isotropic Gaussian noise model.
+    /// </summary>
+    [Category("ModelParameters")]
+    [Description("The initial variance of the isotropic Gaussian noise model.")]
+    public double InitialVariance { get; set; } = 1.0;
+
+    /// <summary>
+    /// Gets or sets the period for reorthogonalizing the principal components.
     /// </summary>
     /// <remarks>
     /// Represented as the number of update steps between reorthogonalization operations.
     /// If not specified, reorthogonalization is not performed.
     /// </remarks>
-    public int ReorthogonalizePeriod { get; private set; }
+    [Category("ModelParameters")]
+    [Description("The number of update steps between reorthogonalization operations. If not specified, reorthogonalization is not performed.")]
+    public int? ReorthogonalizePeriod { get; set; }
 
     /// <summary>
-    /// Gets the sample offset used in the learning rate schedule when Kappa is specified.
+    /// Gets or sets the sample offset used in the learning rate schedule when Kappa is specified.
     /// </summary>
-    public int SampleOffset { get; private set; }
-
-    /// <inheritdoc/>
-    public override Tensor Components { get; protected set; } = empty(0);
-
-    /// <summary>
-    /// Gets the random number generator used for initializing the model.
-    /// </summary>
-    public Generator? Generator { get; private set; }
+    [Category("ModelParameters")]
+    [Description("The sample offset used in the learning rate schedule when Kappa is specified. If not specified, the decaying learning rate starts from the first sample.")]
+    public int? SampleOffset { get; set; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="OnlineProbabilisticPca"/> class.
+    /// Gets or sets the random number generator used for initializing the model.
     /// </summary>
-    /// <param name="numComponents"></param>
-    /// <param name="device"></param>
-    /// <param name="scalarType"></param>
-    /// <param name="initialVariance"></param>
-    /// <param name="generator"></param>
-    /// <param name="rho"></param>
-    /// <param name="kappa"></param>
-    /// <param name="sampleOffset"></param>
-    /// <param name="reorthogonalizePeriod"></param>
-    /// <exception cref="ArgumentException"></exception>
-    public OnlineProbabilisticPca(int numComponents,
-        Device? device = null,
-        ScalarType? scalarType = null,
-        double initialVariance = 1.0,
-        Generator? generator = null,
-        double? rho = 0.1,
-        double? kappa = null,
-        int? sampleOffset = null,
-        int? reorthogonalizePeriod = null
-        ) : base(numComponents,
-            device,
-            scalarType)
+    [XmlIgnore]
+    [Description("The random number generator used for initializing the model.")]
+    public Generator? Generator { get; set; }
+
+    private void CheckParameters()
     {
-        if (initialVariance <= 0)
+        if (InitialVariance <= 0)
         {
-            throw new ArgumentException("Starting variance must be greater than or equal to zero.", nameof(initialVariance));
+            throw new InvalidOperationException("Initial variance must be greater than zero.");
         }
 
-        if (kappa.HasValue && rho.HasValue)
+        if (Kappa.HasValue && Rho.HasValue)
         {
-            throw new ArgumentException("Only one of rho or kappa should be specified, not both.", nameof(rho));
+            throw new InvalidOperationException("Only one of Rho or Kappa should be specified, not both.");
         }
 
-        if (!kappa.HasValue && !rho.HasValue)
+        if (!Kappa.HasValue && !Rho.HasValue)
         {
-            throw new ArgumentException("Either rho or kappa must be specified.", nameof(rho));
+            throw new InvalidOperationException("Either Rho or Kappa must be specified.");
         }
 
-        if (rho.HasValue)
+        if (Rho.HasValue && (Rho.Value <= 0 || Rho.Value >= 1))
         {
-            if (rho.Value <= 0 || rho.Value >= 1)
-            {
-                throw new ArgumentException("Rho must be in the range (0, 1).", nameof(rho));
-            }
-
-            UpdateSchedule = () => rho.Value;
-        }
-        else
-        {
-            sampleOffset ??= 0;
-            if (sampleOffset < 0)
-            {
-                throw new ArgumentException("Sample offset must be a positive integer.", nameof(sampleOffset));
-            }
-
-            if (!kappa.HasValue)
-            {
-                throw new ArgumentException("Kappa must be specified when using a learning rate schedule.", nameof(kappa));
-            }
-
-            if (kappa <= 0.5 || kappa > 1)
-            {
-                throw new ArgumentException("Kappa must be in the range (0.5, 1].", nameof(kappa));
-            }
-
-            UpdateSchedule = () => Math.Pow(_stepCount + SampleOffset, -kappa.Value);
+            throw new InvalidOperationException("Rho must be in the range (0, 1).");
         }
 
-        if (reorthogonalizePeriod.HasValue)
+        if (Kappa.HasValue && (Kappa.Value <= 0.5 || Kappa.Value > 1))
         {
-            _reorthogonalize = true;
-            ReorthogonalizePeriod = reorthogonalizePeriod.Value;
+            throw new InvalidOperationException("Kappa must be in the range (0.5, 1].");
         }
 
-        Generator = generator;
-        Rho = rho;
-        Kappa = kappa;
-        SampleOffset = sampleOffset ?? 0;
-        Variance = initialVariance;
+        if (SampleOffset < 0)
+        {
+            throw new InvalidOperationException("Sample offset must be a positive integer.");
+        }
+    }
+
+    private double GetUpdateRate()
+    {
+        return Rho ?? Math.Pow(_stepCount + (SampleOffset ?? 0), -Kappa!.Value);
     }
 
     /// <inheritdoc/>
     public override void Fit(Tensor data)
     {
+        CheckParameters();
         base.Fit(data);
 
         using (no_grad())
@@ -162,7 +138,7 @@ public class OnlineProbabilisticPca : PcaBaseModel
         {
 
             _stepCount++;
-            var rho = UpdateSchedule();
+            var rho = GetUpdateRate();
 
             // Initialize dimensions
             var numSamples = data.size(0);
@@ -170,15 +146,16 @@ public class OnlineProbabilisticPca : PcaBaseModel
             // Initialize parameters
             if (Means.numel() == 0)
             {
-                Means = zeros(NumFeatures, device: Device, dtype: ScalarType).MoveToOuterDisposeScope();
-                var weights = qr(randn(NumFeatures, NumComponents, generator: Generator, device: Device, dtype: ScalarType), mode: QRMode.Reduced).Q;
+                Variance = InitialVariance;
+                Means = zeros(NumFeatures, device: Device, dtype: Type).MoveToOuterDisposeScope();
+                var weights = qr(randn(NumFeatures, NumComponents, generator: Generator, device: Device, dtype: Type), mode: QRMode.Reduced).Q;
                 Components = (weights * Variance).MoveToOuterDisposeScope();
-                _identityComponents = eye(NumComponents, device: Device, dtype: ScalarType).MoveToOuterDisposeScope();
-                _mx = zeros(NumFeatures, device: Device, dtype: ScalarType).MoveToOuterDisposeScope(); // d
-                _Cxz = zeros(NumFeatures, NumComponents, device: Device, dtype: ScalarType).MoveToOuterDisposeScope(); // d x q
-                _mz = zeros(NumComponents, device: Device, dtype: ScalarType).MoveToOuterDisposeScope(); // q
-                _Czz = zeros(NumComponents, NumComponents, device: Device, dtype: ScalarType).MoveToOuterDisposeScope(); // q x q
-                _sxx = zeros(1, device: Device, dtype: ScalarType).MoveToOuterDisposeScope(); // scalar
+                _identityComponents = eye(NumComponents, device: Device, dtype: Type).MoveToOuterDisposeScope();
+                _mx = zeros(NumFeatures, device: Device, dtype: Type).MoveToOuterDisposeScope(); // d
+                _Cxz = zeros(NumFeatures, NumComponents, device: Device, dtype: Type).MoveToOuterDisposeScope(); // d x q
+                _mz = zeros(NumComponents, device: Device, dtype: Type).MoveToOuterDisposeScope(); // q
+                _Czz = zeros(NumComponents, NumComponents, device: Device, dtype: Type).MoveToOuterDisposeScope(); // q x q
+                _sxx = zeros(1, device: Device, dtype: Type).MoveToOuterDisposeScope(); // scalar
             }
 
             // Covariance matrix
@@ -220,8 +197,8 @@ public class OnlineProbabilisticPca : PcaBaseModel
             // M-step
             var weightsUpdated = Utils.InvertSPD(Szz, Sxz.T).T;
 
-            if (_reorthogonalize &&
-                _stepCount % ReorthogonalizePeriod == 0)
+            if (ReorthogonalizePeriod.HasValue &&
+                _stepCount % ReorthogonalizePeriod.Value == 0)
             {
                 var (U, S, Vh) = svd(weightsUpdated, fullMatrices: false);
                 var R = Vh.T;
@@ -248,8 +225,6 @@ public class OnlineProbabilisticPca : PcaBaseModel
                 .to_type(TorchSharp.torch.ScalarType.Float64)
                 .item<double>();
         }
-
-        IsFitted = true;
     }
 
     /// <inheritdoc/>

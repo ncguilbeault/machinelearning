@@ -1,29 +1,31 @@
-﻿using static TorchSharp.torch;
+﻿using System.ComponentModel;
+using System.Xml.Serialization;
+using static TorchSharp.torch;
 using static TorchSharp.torch.linalg;
+
+using Bonsai.ML.Torch;
 
 namespace Bonsai.ML.Pca.Torch;
 
 /// <summary>
 /// Represents a standard Principal Component Analysis (PCA) model.
 /// </summary>
-public class Pca(int numComponents,
-    Device? device = null,
-    ScalarType? scalarType = null
-) : PcaBaseModel(numComponents,
-        device,
-        scalarType)
+[Description("Creates a standard PCA model.")]
+[WorkflowElementCategory(ElementCategory.Source)]
+public class Pca : PcaBaseModel
 {
     /// <summary>
     /// Gets the mean of the fitted data.
     /// </summary>
+    [XmlIgnore]
+    [Browsable(false)]
     public Tensor Mean { get; private set; } = empty(0);
 
-    /// <inheritdoc/>
-    public override Tensor Components { get; protected set; } = empty(0);
-
     /// <summary>
-    /// The singular values of the fitted data.
+    /// Gets the singular values of the fitted data.
     /// </summary>
+    [XmlIgnore]
+    [Browsable(false)]
     public Tensor SingularValues { get; private set; } = empty(0);
 
     /// <inheritdoc/>
@@ -40,20 +42,17 @@ public class Pca(int numComponents,
             var components = Vh.slice(0, 0, NumComponents, 1).T;
             var singularValues = S.slice(0, 0, NumComponents, 1);
 
-            if (ScalarType is not null && ScalarType != data.dtype)
+            if (Type != data.dtype)
             {
-                var scalarType = ScalarType.Value;
-                mean = mean.to(scalarType);
-                components = components.to(scalarType);
-                singularValues = singularValues.to(scalarType);
+                mean = mean.to(Type);
+                components = components.to(Type);
+                singularValues = singularValues.to(Type);
             }
 
             Mean = mean.MoveToOuterDisposeScope();
             Components = components.MoveToOuterDisposeScope();
             SingularValues = singularValues.MoveToOuterDisposeScope();
         }
-
-        IsFitted = true;
     }
 
     /// <inheritdoc/>

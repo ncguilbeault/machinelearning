@@ -1,53 +1,66 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Linq.Expressions;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Xml.Serialization;
 using static TorchSharp.torch;
+using Bonsai.Expressions;
+using Bonsai.ML.Torch;
 
 namespace Bonsai.ML.Pca.Torch;
 
 /// <summary>
 /// Provides an abstract base class for PCA models.
 /// </summary>
-public abstract class PcaBaseModel : IPcaBaseModel
+public abstract class PcaBaseModel : IScalarTypeProvider
 {
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets the number of features in the fitted data.
+    /// </summary>
+    [XmlIgnore]
+    [Browsable(false)]
     public int NumFeatures { get; protected set; } = -1;
 
     /// <inheritdoc/>
-    public abstract Tensor Components { get; protected set; }
-
-    /// <inheritdoc/>
-    public int NumComponents { get; private set; }
-
-    /// <inheritdoc/>
-    public Device Device { get; private set; }
-
-    /// <inheritdoc/>
-    public ScalarType? ScalarType { get; private set; }
+    [XmlIgnore]
+    [Browsable(false)]
+    public Tensor Components { get; protected set; } = empty(0);
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PcaBaseModel"/> class.
+    /// Gets or sets the number of principal components kept by the model.
     /// </summary>
-    /// <param name="numComponents"></param>
-    /// <param name="device"></param>
-    /// <param name="scalarType"></param>
-    /// <exception cref="ArgumentException"></exception>
-    public PcaBaseModel(int numComponents,
-        Device? device = null,
-        ScalarType? scalarType = null)
-    {
-        if (numComponents <= 0)
-        {
-            throw new ArgumentException("Number of components must be greater than zero.", nameof(numComponents));
-        }
+    [Category("ModelParameters")]
+    [Description("The number of principal components kept by the model.")]
+    public int NumComponents { get; set; } = 2;
 
-        NumComponents = numComponents;
-        Device = device ?? CPU;
-        ScalarType = scalarType;
-    }
+    /// <summary>
+    /// Gets or sets the device on which the model operates.
+    /// </summary>
+    [XmlIgnore]
+    [Description("The device on which the model operates.")]
+    public Device? Device { get; set; }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets or sets the data type used by the model.
+    /// </summary>
+    [Description("The data type used by the model.")]
+    public ScalarType Type { get; set; } = ScalarType.Float32;
+
+    /// <summary>
+    /// Fits the PCA model to the given data.
+    /// </summary>
+    /// <remarks>
+    /// The input data should be a 2D tensor with shape (samples x features).
+    /// </remarks>
+    /// <param name="data"></param>
     public virtual void Fit(Tensor data)
     {
+        if (NumComponents <= 0)
+            throw new InvalidOperationException("Number of components must be greater than zero.");
+
         CheckDataCompatibility(data);
 
         var d = data.size(1);
@@ -58,7 +71,14 @@ public abstract class PcaBaseModel : IPcaBaseModel
         NumFeatures = (int)d;
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Transforms the input data using the PCA model.
+    /// </summary>
+    /// <remarks>
+    /// The input data should be a 2D tensor with shape (samples x features).
+    /// </remarks>
+    /// <param name="data"></param>
+    /// <returns></returns>
     public virtual Tensor Transform(Tensor data)
     {
         CheckFitted();
@@ -67,14 +87,28 @@ public abstract class PcaBaseModel : IPcaBaseModel
         return data;
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Fits the PCA model to the given data and transforms it.
+    /// </summary>
+    /// <remarks>
+    /// The input data should be a 2D tensor with shape (samples x features).
+    /// </remarks>
+    /// <param name="data"></param>
+    /// <returns></returns>
     public virtual Tensor FitAndTransform(Tensor data)
     {
         Fit(data);
         return Transform(data);
     }
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Reconstructs the input data using the PCA model.
+    /// </summary>
+    /// <remarks>
+    /// The input data should be a 2D tensor with shape (samples x features).
+    /// </remarks>
+    /// <param name="data"></param>
+    /// <returns></returns>
     public virtual Tensor Reconstruct(Tensor data)
     {
         CheckFitted();

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Xml.Serialization;
 using static TorchSharp.torch;
 using static TorchSharp.torch.linalg;
 
@@ -7,80 +9,88 @@ namespace Bonsai.ML.Pca.Torch;
 /// <summary>
 /// Represents a probabilistic PCA model.
 /// </summary>
+[Description("Creates a probabilistic PCA model.")]
+[WorkflowElementCategory(ElementCategory.Source)]
 public class ProbabilisticPca : PcaBaseModel
 {
-    private readonly int _iterations;
-    private readonly double _tolerance;
+    private Tensor _logConst = log(2 * Math.PI);
 
     /// <summary>
     /// Gets the mean of the fitted data.
     /// </summary>
+    [XmlIgnore]
+    [Browsable(false)]
     public Tensor Mean { get; private set; } = empty(0);
 
     /// <summary>
     /// Gets the variance of the isotropic Gaussian noise model.
     /// </summary>
+    [XmlIgnore]
+    [Browsable(false)]
     public double Variance { get; private set; }
 
     /// <summary>
     /// Gets the log likelihood of the fitted model.
     /// </summary>
+    [XmlIgnore]
+    [Browsable(false)]
     public Tensor LogLikelihood { get; private set; } = empty(0);
 
-    /// <inheritdoc/>
-    public override Tensor Components { get; protected set; } = empty(0);
+    /// <summary>
+    /// Gets or sets the initial variance of the isotropic Gaussian noise model.
+    /// </summary>
+    [Category("ModelParameters")]
+    [Description("The initial variance of the isotropic Gaussian noise model.")]
+    public double InitialVariance { get; set; } = 1.0;
 
     /// <summary>
-    /// Gets the random number generator used for initializing the model.
+    /// Gets or sets the maximum number of iterations used for fitting the model.
     /// </summary>
-    public Generator? Generator { get; private set; }
+    [Category("ModelParameters")]
+    [Description("The maximum number of iterations used for fitting the model.")]
+    public int Iterations { get; set; } = 100;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ProbabilisticPca"/> class.
+    /// Gets or sets the tolerance for convergence when fitting the model.
     /// </summary>
-    /// <param name="numComponents"></param>
-    /// <param name="device"></param>
-    /// <param name="scalarType"></param>
-    /// <param name="initialVariance"></param>
-    /// <param name="generator"></param>
-    /// <param name="iterations"></param>
-    /// <param name="tolerance"></param>
-    /// <exception cref="ArgumentException"></exception>
-    public ProbabilisticPca(int numComponents,
-        Device? device = null,
-        ScalarType? scalarType = null,
-        double initialVariance = 1.0,
-        Generator? generator = null,
-        int iterations = 100,
-        double tolerance = 1e-5
-        ) : base(numComponents,
-            device,
-            scalarType)
+    [Category("ModelParameters")]
+    [Description("The tolerance for convergence when fitting the model.")]
+    public double Tolerance { get; set; } = 1e-5;
+
+    /// <summary>
+    /// Gets or sets the random number generator used for initializing the model.
+    /// </summary>
+    [XmlIgnore]
+    [Description("The random number generator used for initializing the model.")]
+    public Generator? Generator { get; set; }
+
+    private void CheckParameters()
     {
-        if (initialVariance < 0)
+        if (InitialVariance < 0)
         {
-            throw new ArgumentException("Starting variance must be greater than or equal to zero.", nameof(initialVariance));
+            throw new InvalidOperationException("Initial variance must be greater than or equal to zero.");
         }
 
-        if (iterations <= 0)
+        if (Iterations <= 0)
         {
-            throw new ArgumentException("Number of iterations must be greater than zero.", nameof(iterations));
+            throw new InvalidOperationException("Number of iterations must be greater than zero.");
         }
 
-        if (tolerance <= 0)
+        if (Tolerance <= 0)
         {
-            throw new ArgumentException("Tolerance must be greater than zero.", nameof(tolerance));
+            throw new InvalidOperationException("Tolerance must be greater than zero.");
         }
-
-        Variance = initialVariance;
-        Generator = generator;
-        _iterations = iterations;
-        _tolerance = tolerance;
     }
 
     /// <inheritdoc/>
     public override void Fit(Tensor data)
     {
+        CheckParameters();
+        if (NumFeatures < 0)
+        {
+            Variance = InitialVariance;
+        }
+
         base.Fit(data);
 
         using (no_grad())
@@ -89,11 +99,11 @@ public class ProbabilisticPca : PcaBaseModel
             var numSamples = data.size(0);
 
             // Initialize log likelihood
-            LogLikelihood = ones(_iterations, device: Device, dtype: ScalarType) * double.NegativeInfinity;
+            LogLikelihood = ones(Iterations, device: Device, dtype: Type) * double.NegativeInfinity;
 
-            var weights = randn(NumFeatures, NumComponents, generator: Generator, device: Device, dtype: ScalarType);
-            var identityComponents = eye(NumComponents, device: Device, dtype: ScalarType);
-            var identityFeatures = eye(NumFeatures, device: Device, dtype: ScalarType);
+            var weights = randn(NumFeatures, NumComponents, generator: Generator, device: Device, dtype: Type);
+            var identityComponents = eye(NumComponents, device: Device, dtype: Type);
+            var identityFeatures = eye(NumFeatures, device: Device, dtype: Type);
 
             var mean = data.mean([0], keepdim: true);
             var dataCentered = data - mean;
@@ -105,14 +115,17 @@ public class ProbabilisticPca : PcaBaseModel
             // Calculate term 1 for variance update
             var term1 = trace(covarianceTerm);
 
+            if (Device is not null)
+                _logConst = _logConst.to(Device);
+
             // Compute log likelihood constant
-            var logLikelihoodConst = NumFeatures * log(2 * Math.PI).to(Device);
+            var logLikelihoodConst = NumFeatures * _logConst;
 
             double diffWeights;
             double diffVariance;
 
             // Repeat until convergence
-            for (int i = 0; i < _iterations; i++)
+            for (int i = 0; i < Iterations; i++)
             {
                 // E-step: Compute the posterior distribution of the latent variables
                 var M = weights.T.matmul(weights) + identityComponents * Variance;
@@ -137,16 +150,16 @@ public class ProbabilisticPca : PcaBaseModel
                 var logLikelihood = -0.5 * numSamples * (logLikelihoodConst + logdet(logLikelihoodTerm) + trace(logLikelihoodTermInv.matmul(sampleCov)));
 
                 // Compare previous and new parameters for convergence
-                diffWeights = linalg.norm(weightsNew - weights).to_type(TorchSharp.torch.ScalarType.Float64).item<double>();
-                diffVariance = abs(varianceNew - Variance).to_type(TorchSharp.torch.ScalarType.Float64).item<double>();
+                diffWeights = linalg.norm(weightsNew - weights).to_type(ScalarType.Float64).item<double>();
+                diffVariance = abs(varianceNew - Variance).to_type(ScalarType.Float64).item<double>();
 
                 // Update loglikelihood, weights and variance
                 LogLikelihood[i] = logLikelihood;
                 weights = weightsNew;
-                Variance = varianceNew.to_type(TorchSharp.torch.ScalarType.Float64).item<double>();
+                Variance = varianceNew.to_type(ScalarType.Float64).item<double>();
 
                 // Check for convergence
-                if (diffWeights < _tolerance && diffVariance < _tolerance)
+                if (diffWeights < Tolerance && diffVariance < Tolerance)
                 {
                     LogLikelihood = LogLikelihood.slice(0, 0, i + 1, 1);
                     break;
@@ -158,8 +171,6 @@ public class ProbabilisticPca : PcaBaseModel
             Components = weights.MoveToOuterDisposeScope();
             Mean = mean.MoveToOuterDisposeScope();
         }
-
-        IsFitted = true;
     }
 
     /// <inheritdoc/>

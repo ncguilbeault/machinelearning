@@ -118,13 +118,13 @@ public class StandardPcaTests
     [TestMethod]
     public void TestStandardPca()
     {
-        var pca = new Pca(numComponents: 2);
+        var pca = new Pca { NumComponents = 2 };
         TestBasic(pca);
 
-        pca = new Pca(numComponents: 2);
+        pca = new Pca { NumComponents = 2 };
         TestRotation(pca);
 
-        pca = new Pca(numComponents: 2);
+        pca = new Pca { NumComponents = 2 };
         TestOffset(pca);
     }
 }

@@ -1,45 +1,43 @@
-﻿using static TorchSharp.torch;
+﻿using System.ComponentModel;
+using System.Xml.Serialization;
+using static TorchSharp.torch;
 
 namespace Bonsai.ML.Pca.Torch;
 
 /// <summary>
 /// Implements streaming/online PCA using the Generalized Hebbian Algorithm (GHA).
 /// </summary>
-/// <param name="numComponents"></param>
-/// <param name="learningRate"></param>
-/// <param name="device"></param>
-/// <param name="scalarType"></param>
-/// <param name="generator"></param>
-public class OnlinePcaGha(
-    int numComponents,
-    double learningRate = 0.1,
-    Device? device = null,
-    ScalarType? scalarType = null,
-    Generator? generator = null
-) : PcaBaseModel(numComponents, device, scalarType)
+[Description("Creates an online PCA model based on the Generalized Hebbian Algorithm.")]
+[WorkflowElementCategory(ElementCategory.Source)]
+public class OnlinePcaGha : PcaBaseModel
 {
     /// <summary>
     /// Gets the number of samples that have been used to fit the model.
     /// </summary>
+    [XmlIgnore]
+    [Browsable(false)]
     public int SampleCount { get; private set; } = 0;
 
     /// <summary>
     /// Gets the mean of the fitted data.
     /// </summary>
+    [XmlIgnore]
+    [Browsable(false)]
     public Tensor Mean { get; private set; } = empty(0);
 
     /// <summary>
     /// Gets or sets the learning rate.
     /// </summary>
-    public double LearningRate { get; set; } = learningRate;
-
-    /// <inheritdoc/>
-    public override Tensor Components { get; protected set; } = empty(0);
+    [Category("ModelParameters")]
+    [Description("The learning rate used when updating the components.")]
+    public double LearningRate { get; set; } = 0.1;
 
     /// <summary>
-    /// Gets the random number generator used for initializing the model.
+    /// Gets or sets the random number generator used for initializing the model.
     /// </summary>
-    public Generator? Generator { get; private set; } = generator;
+    [XmlIgnore]
+    [Description("The random number generator used for initializing the model.")]
+    public Generator? Generator { get; set; }
 
     /// <inheritdoc/>
     public override void Fit(Tensor data)
@@ -53,7 +51,7 @@ public class OnlinePcaGha(
         {
             // Initialize components randomly
             if (Components.numel() == 0)
-                Components = randn([NumFeatures, NumComponents], dtype: ScalarType, device: Device, generator: Generator);
+                Components = randn([NumFeatures, NumComponents], dtype: Type, device: Device, generator: Generator);
 
             if (Mean.numel() == 0)
                 Mean = data.mean([0], keepdim: true);
@@ -78,8 +76,6 @@ public class OnlinePcaGha(
             Components = linalg.qr(weights / norms, mode: linalg.QRMode.Reduced).Q.MoveToOuterDisposeScope();
             Mean = Mean.MoveToOuterDisposeScope();
         }
-
-        IsFitted = true;
     }
 
     /// <inheritdoc/>
