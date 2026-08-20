@@ -20,7 +20,7 @@ public class MatrixMultiply
     /// </summary>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor>> source)
     {
-        return source.Select(input => input.Item1.matmul(input.Item2));
+        return source.Select(value => value.Item1.matmul(value.Item2));
     }
 
     /// <summary>
@@ -28,7 +28,7 @@ public class MatrixMultiply
     /// </summary>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor, Tensor>> source)
     {
-        return source.Select(input => input.Item1.matmul(input.Item2).matmul(input.Item3));
+        return source.Select(value => value.Item1.matmul(value.Item2).matmul(value.Item3));
     }
 
     /// <summary>
@@ -36,7 +36,7 @@ public class MatrixMultiply
     /// </summary>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor, Tensor, Tensor>> source)
     {
-        return source.Select(input => input.Item1.matmul(input.Item2).matmul(input.Item3).matmul(input.Item4));
+        return source.Select(value => value.Item1.matmul(value.Item2).matmul(value.Item3).matmul(value.Item4));
     }
 
     /// <summary>
@@ -44,7 +44,7 @@ public class MatrixMultiply
     /// </summary>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor, Tensor, Tensor, Tensor>> source)
     {
-        return source.Select(input => input.Item1.matmul(input.Item2).matmul(input.Item3).matmul(input.Item4).matmul(input.Item5));
+        return source.Select(value => value.Item1.matmul(value.Item2).matmul(value.Item3).matmul(value.Item4).matmul(value.Item5));
     }
 
     /// <summary>
@@ -52,7 +52,7 @@ public class MatrixMultiply
     /// </summary>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor, Tensor, Tensor, Tensor, Tensor>> source)
     {
-        return source.Select(input => input.Item1.matmul(input.Item2).matmul(input.Item3).matmul(input.Item4).matmul(input.Item5).matmul(input.Item6));
+        return source.Select(value => value.Item1.matmul(value.Item2).matmul(value.Item3).matmul(value.Item4).matmul(value.Item5).matmul(value.Item6));
     }
 
     /// <summary>
@@ -60,7 +60,7 @@ public class MatrixMultiply
     /// </summary>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor, Tensor, Tensor, Tensor, Tensor, Tensor>> source)
     {
-        return source.Select(input => input.Item1.matmul(input.Item2).matmul(input.Item3).matmul(input.Item4).matmul(input.Item5).matmul(input.Item6).matmul(input.Item7));
+        return source.Select(value => value.Item1.matmul(value.Item2).matmul(value.Item3).matmul(value.Item4).matmul(value.Item5).matmul(value.Item6).matmul(value.Item7));
     }
 
     /// <summary>
@@ -68,10 +68,10 @@ public class MatrixMultiply
     /// </summary>
     public IObservable<Tensor> Process(IObservable<IEnumerable<Tensor>> source)
     {
-        return source.Select(input =>
+        return source.Select(value =>
         {
-            var result = input.FirstOrDefault();
-            foreach (var tensor in input.Skip(1))
+            var result = value.FirstOrDefault();
+            foreach (var tensor in value.Skip(1))
             {
                 result = result.matmul(tensor);
             }

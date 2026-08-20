@@ -27,7 +27,7 @@ public class MultiDot
     /// </summary>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor>> source)
     {
-        return source.Select(input => multi_dot([input.Item1, input.Item2]));
+        return source.Select(value => multi_dot([value.Item1, value.Item2]));
     }
 
     /// <summary>
@@ -35,7 +35,7 @@ public class MultiDot
     /// </summary>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor, Tensor>> source)
     {
-        return source.Select(input => multi_dot([input.Item1, input.Item2, input.Item3]));
+        return source.Select(value => multi_dot([value.Item1, value.Item2, value.Item3]));
     }
 
     /// <summary>
@@ -43,7 +43,7 @@ public class MultiDot
     /// </summary>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor, Tensor, Tensor>> source)
     {
-        return source.Select(input => multi_dot([input.Item1, input.Item2, input.Item3, input.Item4]));
+        return source.Select(value => multi_dot([value.Item1, value.Item2, value.Item3, value.Item4]));
     }
 
     /// <summary>
@@ -51,7 +51,7 @@ public class MultiDot
     /// </summary>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor, Tensor, Tensor, Tensor>> source)
     {
-        return source.Select(input => multi_dot([input.Item1, input.Item2, input.Item3, input.Item4, input.Item5]));
+        return source.Select(value => multi_dot([value.Item1, value.Item2, value.Item3, value.Item4, value.Item5]));
     }
 
     /// <summary>
@@ -59,7 +59,7 @@ public class MultiDot
     /// </summary>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor, Tensor, Tensor, Tensor, Tensor>> source)
     {
-        return source.Select(input => multi_dot([input.Item1, input.Item2, input.Item3, input.Item4, input.Item5, input.Item6]));
+        return source.Select(value => multi_dot([value.Item1, value.Item2, value.Item3, value.Item4, value.Item5, value.Item6]));
     }
 
     /// <summary>
@@ -67,7 +67,7 @@ public class MultiDot
     /// </summary>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor, Tensor, Tensor, Tensor, Tensor, Tensor>> source)
     {
-        return source.Select(input => multi_dot([input.Item1, input.Item2, input.Item3, input.Item4, input.Item5, input.Item6, input.Item7]));
+        return source.Select(value => multi_dot([value.Item1, value.Item2, value.Item3, value.Item4, value.Item5, value.Item6, value.Item7]));
     }
 
     /// <summary>
@@ -75,12 +75,12 @@ public class MultiDot
     /// </summary>
     public IObservable<Tensor> Process(IObservable<IEnumerable<Tensor>> source)
     {
-        return source.Select(input =>
+        return source.Select(value =>
         {
-            if (input.Count() < 2)
-                return input.FirstOrDefault();
+            if (value.Count() < 2)
+                return value.FirstOrDefault();
 
-            return multi_dot([.. input]);
+            return multi_dot([.. value]);
         });
     }
 }
