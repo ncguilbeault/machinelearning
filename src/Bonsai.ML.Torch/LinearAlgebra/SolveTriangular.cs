@@ -30,7 +30,7 @@ public class SolveTriangular
     /// Gets or sets whether the first matrix has a unit diagonal, i.e., all diagonal elements are assumed to be 1.
     /// </summary>
     [Description("Whether the first matrix has a unit diagonal, i.e., all diagonal elements are assumed to be 1.")]
-    public bool UnitDiagonal { get; set; } = false;
+    public bool UnitDiagonal { get; set; }
 
     /// <summary>
     /// Computes the solution to a triangular system of linear equations for each pair of input tensors.

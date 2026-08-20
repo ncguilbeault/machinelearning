@@ -18,19 +18,19 @@ public class MatrixRank
     /// Gets or sets the absolute tolerance for singular values to be considered non-zero.
     /// </summary>
     [Description("The absolute tolerance for singular values to be considered non-zero.")]
-    public double? AbsoluteTolerance { get; set; } = null;
+    public double? AbsoluteTolerance { get; set; }
 
     /// <summary>
     /// Gets or sets the relative tolerance for singular values to be considered non-zero.
     /// </summary>
     [Description("The relative tolerance for singular values to be considered non-zero.")]
-    public double? RelativeTolerance { get; set; } = null;
+    public double? RelativeTolerance { get; set; }
 
     /// <summary>
     /// Gets or sets whether to treat the input matrix as Hermitian if input is complex or symmetric if real.
     /// </summary>
     [Description("Whether to treat the input matrix as Hermitian if input is complex or symmetric if real.")]
-    public bool Hermitian { get; set; } = false;
+    public bool Hermitian { get; set; }
 
     /// <summary>
     /// Computes the numerical rank of a matrix.

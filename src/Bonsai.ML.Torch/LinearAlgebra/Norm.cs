@@ -18,13 +18,13 @@ public class Norm
     /// </summary>
     [TypeConverter(typeof(UnidimensionalArrayConverter))]
     [Description("The dimensions along which to compute the norm.")]
-    public long[] Dimensions { get; set; } = null;
+    public long[]? Dimensions { get; set; } = null;
 
     /// <summary>
     /// Gets or sets whether the reduced dimensions are retained in the result as dimensions with size one.
     /// </summary>
     [Description("Whether the reduced dimensions are retained in the result as dimensions with size one.")]
-    public bool Keepdim { get; set; } = false;
+    public bool Keepdim { get; set; }
 
     /// <summary>
     /// Computes a matrix norm.

@@ -17,7 +17,7 @@ public class SingularValueDecomposition
     /// Gets or sets whether to compute the full or reduced SVD.
     /// </summary>
     [Description("Whether to compute the full or reduced SVD.")]
-    public bool FullMatrices { get; set; } = false;
+    public bool FullMatrices { get; set; } = true;
 
     /// <summary>
     /// Computes the singular value decomposition (SVD) of a matrix.
