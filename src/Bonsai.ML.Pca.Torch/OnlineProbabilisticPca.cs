@@ -29,7 +29,7 @@ public class OnlineProbabilisticPca : PcaBaseModel
     /// Gets the variance of the isotropic Gaussian noise model.
     /// </summary>
     [XmlIgnore]
-    public double Variance { get; private set; }
+    public double Variance { get; private set; } = 0.0;
 
     /// <summary>
     /// Gets or sets the constant learning rate parameter.
@@ -238,5 +238,29 @@ public class OnlineProbabilisticPca : PcaBaseModel
     {
         base.Reconstruct(data);
         return data.matmul(Components.T) + Means;
+    }
+
+    /// <inheritdoc/>
+    public override Tensor FitAndTransform(Tensor data)
+    {
+        Fit(data);
+        return Transform(data);
+    }
+
+    /// <inheritdoc/>
+    public override void Dispose()
+    {
+        base.Dispose();
+
+        Means = Utils.DisposeAndReset(Means);
+        Variance = 0.0;
+
+        _stepCount = 0;
+        _identityComponents = Utils.DisposeAndReset(_identityComponents);
+        _mx = Utils.DisposeAndReset(_mx);
+        _Cxz = Utils.DisposeAndReset(_Cxz);
+        _mz = Utils.DisposeAndReset(_mz);
+        _Czz = Utils.DisposeAndReset(_Czz);
+        _sxx = Utils.DisposeAndReset(_sxx);
     }
 }

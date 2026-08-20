@@ -23,7 +23,7 @@ public class ProbabilisticPca : PcaBaseModel
     /// Gets the variance of the isotropic Gaussian noise model.
     /// </summary>
     [XmlIgnore]
-    public double Variance { get; private set; }
+    public double Variance { get; private set; } = 0.0;
 
     /// <summary>
     /// Gets the log likelihood of the fitted model.
@@ -183,5 +183,21 @@ public class ProbabilisticPca : PcaBaseModel
     {
         base.Reconstruct(data);
         return data.matmul(Components.T) + Mean;
+    }
+
+    /// <inheritdoc/>
+    public override Tensor FitAndTransform(Tensor data)
+    {
+        Fit(data);
+        return Transform(data);
+    }
+
+    /// <inheritdoc/>
+    public override void Dispose()
+    {
+        base.Dispose();
+        Mean = Utils.DisposeAndReset(Mean);
+        Variance = 0.0;
+        LogLikelihood = Utils.DisposeAndReset(LogLikelihood);
     }
 }

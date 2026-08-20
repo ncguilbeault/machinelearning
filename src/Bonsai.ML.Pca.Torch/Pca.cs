@@ -63,4 +63,19 @@ public class Pca : PcaBaseModel
         base.Reconstruct(data);
         return data.matmul(Components.T) + Mean;
     }
+
+    /// <inheritdoc/>
+    public override Tensor FitAndTransform(Tensor data)
+    {
+        Fit(data);
+        return Transform(data);
+    }
+
+    /// <inheritdoc/>
+    public override void Dispose()
+    {
+        base.Dispose();
+        Mean = Utils.DisposeAndReset(Mean);
+        SingularValues = Utils.DisposeAndReset(SingularValues);
+    }
 }

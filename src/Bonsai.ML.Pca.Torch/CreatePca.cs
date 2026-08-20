@@ -73,7 +73,12 @@ public class CreatePca : ZeroArgumentExpressionBuilder, INamedElement, ICustomTy
 
     static IObservable<T> Process<T>(T model) where T : PcaBaseModel
     {
-        return Observable.Return(model);
+        return Observable.Using(
+            () => model,
+            m => Observable.Return(m)
+                .Concat(Observable.Never(m))
+                .Finally(() => m.Dispose())
+        );
     }
 
     PropertyDescriptorCollection ICustomTypeDescriptor.GetProperties(Attribute[]? attributes)
@@ -89,7 +94,7 @@ public class CreatePca : ZeroArgumentExpressionBuilder, INamedElement, ICustomTy
         ((ICustomTypeDescriptor)this).GetProperties(Array.Empty<Attribute>());
 
     object ICustomTypeDescriptor.GetPropertyOwner(PropertyDescriptor? pd) =>
-        (object)Model ?? this;
+        pd == null || pd.ComponentType.IsInstanceOfType(Model) ? Model : this;
 
     AttributeCollection ICustomTypeDescriptor.GetAttributes() => TypeDescriptor.GetAttributes(this, true);
 

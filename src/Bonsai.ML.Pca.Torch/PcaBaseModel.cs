@@ -10,7 +10,7 @@ namespace Bonsai.ML.Pca.Torch;
 /// <summary>
 /// Provides an abstract base class for PCA models.
 /// </summary>
-public abstract class PcaBaseModel
+public abstract class PcaBaseModel : IDisposable
 {
     /// <summary>
     /// Gets the number of features in the fitted data.
@@ -51,6 +51,7 @@ public abstract class PcaBaseModel
     /// <param name="data"></param>
     public virtual void Fit(Tensor data)
     {
+
         if (NumComponents <= 0)
             throw new InvalidOperationException("Number of components must be greater than zero.");
 
@@ -142,5 +143,14 @@ public abstract class PcaBaseModel
 
         if (d != NumComponents)
             throw new ArgumentException("The number of features in the data does not match the number of components in the fitted model.", nameof(data));
+    }
+
+    /// <summary>
+    /// Releases all resources used by the PCA model.
+    /// </summary>
+    public virtual void Dispose()
+    {
+        Components = Utils.DisposeAndReset(Components);
+        NumFeatures = -1;
     }
 }

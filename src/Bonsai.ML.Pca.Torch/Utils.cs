@@ -26,4 +26,10 @@ internal static class Utils
         }
         return cholesky_solve(rhs, L);
     }
+
+    internal static Tensor DisposeAndReset(Tensor tensor)
+    {
+        tensor.Dispose();
+        return empty(0);
+    }
 }
