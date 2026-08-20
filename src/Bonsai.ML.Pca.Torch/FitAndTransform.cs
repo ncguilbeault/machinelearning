@@ -14,9 +14,9 @@ namespace Bonsai.ML.Pca.Torch;
 [WorkflowElementCategory(ElementCategory.Transform)]
 public class FitAndTransform
 {
-    private static void FitModelAndTransformData(PcaBaseModel model, Tensor data)
+    private static Tensor FitModelAndTransformData(PcaBaseModel model, Tensor data)
     {
-        model.FitAndTransform(data);
+        return model.FitAndTransform(data);
     }
 
     /// <summary>
@@ -26,9 +26,10 @@ public class FitAndTransform
     /// <returns></returns>
     public IObservable<Tuple<T, Tensor>> Process<T>(IObservable<Tuple<T, Tensor>> source) where T : PcaBaseModel
     {
-        return source.Do((value) =>
+        return source.Select((value) =>
         {
-            FitModelAndTransformData(value.Item1, value.Item2);
+            var transformed = FitModelAndTransformData(value.Item1, value.Item2);
+            return Tuple.Create(value.Item1, transformed);
         });
     }
 
@@ -39,9 +40,10 @@ public class FitAndTransform
     /// <returns></returns>
     public IObservable<Tuple<Tensor, T>> Process<T>(IObservable<Tuple<Tensor, T>> source) where T : PcaBaseModel
     {
-        return source.Do((value) =>
+        return source.Select((value) =>
         {
-            FitModelAndTransformData(value.Item2, value.Item1);
+            var transformed = FitModelAndTransformData(value.Item2, value.Item1);
+            return Tuple.Create(transformed, value.Item2);
         });
     }
 }
