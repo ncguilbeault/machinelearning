@@ -18,8 +18,8 @@ public class EigenvalueDecomposition
     /// </summary>
     /// <param name="source"></param>
     /// <returns></returns>
-    public IObservable<EigenDecompositionResult> Process(IObservable<Tensor> source)
+    public IObservable<EigenvalueDecompositionResult> Process(IObservable<Tensor> source)
     {
-        return source.Select(tensor => new EigenDecompositionResult(linalg.eig(tensor)));
+        return source.Select(tensor => new EigenvalueDecompositionResult(linalg.eig(tensor)));
     }
 }
