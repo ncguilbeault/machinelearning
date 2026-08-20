@@ -6,7 +6,8 @@ using static TorchSharp.torch;
 namespace Bonsai.ML.Torch.LinearAlgebra;
 
 /// <summary>
-/// Represents an operator that computes the Cholesky decomposition of a complex Hermitian or real symmetric positive-definite matrix.
+/// Represents an operator that computes the Cholesky decomposition of a complex Hermitian or real symmetric
+/// positive-definite matrix.
 /// </summary>
 [Combinator]
 [Description("Computes the Cholesky decomposition of a complex Hermitian or real symmetric positive-definite matrix.")]
