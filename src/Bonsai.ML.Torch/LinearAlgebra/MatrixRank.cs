@@ -41,6 +41,6 @@ public class MatrixRank
     /// </summary>
     public IObservable<Tensor> Process(IObservable<Tensor> source)
     {
-        return source.Select(input => matrix_rank(input, atol: AbsoluteTolerance, rtol: RelativeTolerance, hermitian: Hermitian));
+        return source.Select(tensor => matrix_rank(tensor, atol: AbsoluteTolerance, rtol: RelativeTolerance, hermitian: Hermitian));
     }
 }
