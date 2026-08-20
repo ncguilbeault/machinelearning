@@ -29,9 +29,9 @@ public class MatrixRank
     public double? RelativeTolerance { get; set; } = null;
 
     /// <summary>
-    /// Gets or sets a value indicating whether to treat the input matrix as Hermitian if input is complex or symmetric if real.
+    /// Gets or sets whether to treat the input matrix as Hermitian if input is complex or symmetric if real.
     /// </summary>
-    [Description("Indicates whether to treat the input matrix as Hermitian if input is complex or symmetric if real.")]
+    [Description("Whether to treat the input matrix as Hermitian if input is complex or symmetric if real.")]
     public bool Hermitian { get; set; } = false;
 
     /// <summary>

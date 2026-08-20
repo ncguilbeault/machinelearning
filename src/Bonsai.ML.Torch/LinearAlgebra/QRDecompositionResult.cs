@@ -9,12 +9,12 @@ namespace Bonsai.ML.Torch.LinearAlgebra;
 public readonly struct QRDecompositionResult((Tensor Q, Tensor R) result)
 {
     /// <summary>
-    /// Gets the orthogonal matrix Q.
+    /// The orthogonal matrix Q.
     /// </summary>
     public Tensor Q => result.Q;
 
     /// <summary>
-    /// Gets the upper triangular matrix R.
+    /// The upper triangular matrix R.
     /// </summary>
     public Tensor R => result.R;
 }

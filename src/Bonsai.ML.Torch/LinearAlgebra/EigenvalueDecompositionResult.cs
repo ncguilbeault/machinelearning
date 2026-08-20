@@ -9,12 +9,12 @@ namespace Bonsai.ML.Torch.LinearAlgebra;
 public readonly struct EigenvalueDecompositionResult((Tensor eigenvalues, Tensor eigenvectors) result)
 {
     /// <summary>
-    /// Gets the eigenvalues of the decomposition.
+    /// The eigenvalues of the decomposition.
     /// </summary>
     public Tensor Eigenvalues => result.eigenvalues;
 
     /// <summary>
-    /// Gets the eigenvectors of the decomposition.
+    /// The eigenvectors of the decomposition.
     /// </summary>
     public Tensor Eigenvectors => result.eigenvectors;
 }

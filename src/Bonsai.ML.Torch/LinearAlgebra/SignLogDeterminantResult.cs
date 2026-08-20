@@ -9,12 +9,12 @@ namespace Bonsai.ML.Torch.LinearAlgebra;
 public readonly struct SignLogDeterminantResult((Tensor sign, Tensor logabsdet) result)
 {
     /// <summary>
-    /// Gets the sign of the determinant.
+    /// The sign of the determinant.
     /// </summary>
     public Tensor Sign => result.sign;
 
     /// <summary>
-    /// Gets the natural logarithm of the absolute value of the determinant.
+    /// The natural logarithm of the absolute value of the determinant.
     /// </summary>
     public Tensor LogAbsDeterminant => result.logabsdet;
 }
