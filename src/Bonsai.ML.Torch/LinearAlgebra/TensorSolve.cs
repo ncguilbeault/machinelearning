@@ -22,7 +22,7 @@ public class TensorSolve
     public long[] Dimensions { get; set; } = [];
 
     /// <summary>
-    /// Computes the solution to the system tensordot(A, X) = B.
+    /// Computes the solution X to the system tensordot(A, X) = B.
     /// </summary>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor>> source)
     {
