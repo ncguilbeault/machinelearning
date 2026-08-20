@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reactive.Linq;
@@ -74,6 +75,12 @@ public class MultiDot
     /// </summary>
     public IObservable<Tensor> Process(IObservable<IEnumerable<Tensor>> source)
     {
-        return source.Select(input => multi_dot([.. input]));
+        return source.Select(input =>
+        {
+            if (input.Count() < 2)
+                return input.FirstOrDefault();
+
+            return multi_dot([.. input]);
+        });
     }
 }
