@@ -19,6 +19,6 @@ public class SignLogDeterminant
     /// </summary>
     public IObservable<SignLogDeterminantResult> Process(IObservable<Tensor> source)
     {
-        return source.Select(result => new SignLogDeterminantResult(linalg.slogdet(result)));
+        return source.Select(tensor => new SignLogDeterminantResult(linalg.slogdet(tensor)));
     }
 }
