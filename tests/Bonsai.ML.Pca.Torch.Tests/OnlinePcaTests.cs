@@ -104,6 +104,64 @@ public class OnlinePcaGhaTests
     }
 
     [TestMethod]
+    public void TestStreamingFitAndTransformMatchesTransformAfterTraining()
+    {
+        var (data, _, _) = OnlinePcaTestHelpers.GenerateDataset(500, [3f, 0.1f]);
+        var model = CreateModel();
+
+        Tensor lastStreamed = empty(0);
+        foreach (var sample in data.split(1))
+            lastStreamed = model.FitAndTransform(sample);
+
+        var numSamples = data.size(0);
+        var lastTransformed = model.Transform(data).slice(0, numSamples - 1, numSamples, 1);
+        var maxDifference = (lastStreamed - lastTransformed).abs().max().item<float>();
+
+        Debug.WriteLine($"Last streamed: {lastStreamed.str()}");
+        Debug.WriteLine($"Last transformed: {lastTransformed.str()}");
+        Debug.WriteLine($"Max difference: {maxDifference}");
+        Assert.IsTrue(maxDifference < 1e-6, $"Streamed and batch results differ by {maxDifference}");
+    }
+
+    [TestMethod]
+    public void TestStreamingFitAndTransformMatchesFitSingleAndBatched()
+    {
+        var (data, _, _) = OnlinePcaTestHelpers.GenerateDataset(500, [3f, 0.1f]);
+        var modelFt = CreateModel();
+
+        Tensor lastFt = empty(0);
+        foreach (var sample in data.split(1))
+            lastFt = modelFt.FitAndTransform(sample);
+
+        var modelS = CreateModel();
+
+        foreach (var sample in data.split(1))
+            modelS.Fit(sample);
+
+        var numSamples = data.size(0);
+        var lastS = modelS.Transform(data).slice(0, numSamples - 1, numSamples, 1);
+
+        var maxFtSDifference = (lastFt - lastS).abs().max().item<float>();
+        Debug.WriteLine($"Last FitAndTransform: {lastFt.str()}");
+        Debug.WriteLine($"Last streamed: {lastS.str()}");
+        Debug.WriteLine($"FitAndTransform vs streamed difference: {maxFtSDifference}");
+        Assert.IsTrue(maxFtSDifference < 1e-6, $"FitAndTransform and streamed results differ by {maxFtSDifference}");
+
+        var modelB = CreateModel();
+        modelB.Fit(data);
+        var meanDifference = (modelS.Mean - modelB.Mean).abs().max().item<float>();
+        Debug.WriteLine($"Streamed vs batch mean difference: {meanDifference}");
+        Assert.IsTrue(meanDifference < 1e-4, $"Streamed and batch means differ by {meanDifference}");
+
+        for (int epoch = 0; epoch < 50; epoch++)
+            modelB.Fit(data);
+
+        var subspaceSimilarity = OnlinePcaTestHelpers.SubspaceSimilarity(modelB.Components, modelS.Components);
+        Debug.WriteLine($"Streamed vs batch subspace similarity: {subspaceSimilarity}");
+        Assert.IsTrue(subspaceSimilarity > 0.99, $"Subspace similarity was {subspaceSimilarity}");
+    }
+
+    [TestMethod]
     public void TestConvergenceOnRotatedData()
     {
         var (data, trueComponents, _) = OnlinePcaTestHelpers.GenerateDataset(10000, [3f, 0.1f], rotationAngle2d: 30.0);
