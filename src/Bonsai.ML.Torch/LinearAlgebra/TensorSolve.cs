@@ -26,9 +26,6 @@ public class TensorSolve
     /// </summary>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor>> source)
     {
-        return source.Select(value =>
-        {
-            return tensorsolve(value.Item1, value.Item2, Dimensions);
-        });
+        return source.Select(value => tensorsolve(value.Item1, value.Item2, Dimensions));
     }
 }

@@ -48,9 +48,6 @@ public class SolveTriangular
     /// </summary>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor>> source)
     {
-        return source.Select(value =>
-        {
-            return solve_triangular(value.Item1, value.Item2, upper: Upper, left: Left, unitriangular: UnitDiagonal);
-        });
+        return source.Select(value => solve_triangular(value.Item1, value.Item2, upper: Upper, left: Left, unitriangular: UnitDiagonal));
     }
 }
