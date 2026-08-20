@@ -23,7 +23,10 @@ public class Norm
     /// <summary>
     /// Gets or sets whether the reduced dimensions are retained in the result as dimensions with size one.
     /// </summary>
-    [Description("Whether the reduced dimensions are retained in the result as dimensions with size one.")]
+    /// <remarks>
+    /// True indicates that the reduced dimensions are retained in the result as dimensions with size one; otherwise, the reduced dimensions are removed from the result.
+    /// </remarks>
+    [Description("True indicates that the reduced dimensions are retained in the result as dimensions with size one; otherwise, the reduced dimensions are removed from the result.")]
     public bool Keepdim { get; set; }
 
     /// <summary>

@@ -16,7 +16,12 @@ public class SingularValueDecomposition
     /// <summary>
     /// Gets or sets whether to compute the full or reduced SVD.
     /// </summary>
-    [Description("Whether to compute the full or reduced SVD.")]
+    /// <remarks>
+    /// True indicates that the full SVD is computed and the vector matrices U and Vh may be padded with extra columns/
+    /// rows to make them square and unitary; otherwise, the reduced SVD is computed and the vector matrices U and Vh
+    /// have only the minimum number of columns/rows.
+    /// </remarks>
+    [Description("True indicates that the full SVD is computed and the vector matrices U and Vh have extra columns/rows to make them unitary; otherwise, the reduced SVD is computed and the vector matrices U and Vh have the minimum number of columns/rows.")]
     public bool FullMatrices { get; set; } = true;
 
     /// <summary>

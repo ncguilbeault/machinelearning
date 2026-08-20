@@ -17,19 +17,30 @@ public class SolveTriangular
     /// <summary>
     /// Gets or sets whether the first matrix is upper triangular.
     /// </summary>
-    [Description("Whether the first matrix is upper triangular.")]
+    /// <remarks>
+    /// True indicates that the first matrix is upper triangular; otherwise, it is lower triangular.
+    /// </remarks>
+    [Description("True indicates that the first matrix is upper triangular; otherwise, it is lower triangular.")]
     public bool Upper { get; set; } = true;
 
     /// <summary>
     /// Gets or sets whether to solve the system with the first matrix on the left or right (AX = B or XA = B).
     /// </summary>
-    [Description("Whether to solve the system with the first matrix on the left or right (AX = B or XA = B).")]
+    /// <remarks>
+    /// True indicates that the system is solved with the first matrix on the left (AX = B); otherwise, it is solved
+    /// with the first matrix on the right (XA = B).
+    /// </remarks>
+    [Description("True indicates that the system is solved with the first matrix on the left (AX = B); otherwise, it is solved with the first matrix on the right (XA = B).")]
     public bool Left { get; set; } = true;
 
     /// <summary>
     /// Gets or sets whether the first matrix has a unit diagonal, i.e., all diagonal elements are assumed to be 1.
     /// </summary>
-    [Description("Whether the first matrix has a unit diagonal, i.e., all diagonal elements are assumed to be 1.")]
+    /// <remarks>
+    /// True indicates that the first matrix has a unit diagonal, i.e., all diagonal elements are assumed to be 1;
+    /// otherwise, the diagonal elements are used as-is.
+    /// </remarks>
+    [Description("True indicates that the first matrix has a unit diagonal, i.e., all diagonal elements are assumed to be 1; otherwise, the diagonal elements are used as-is.")]
     public bool UnitDiagonal { get; set; }
 
     /// <summary>
