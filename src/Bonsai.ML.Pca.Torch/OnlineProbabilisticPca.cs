@@ -220,7 +220,7 @@ public class OnlineProbabilisticPca : PcaBaseModel
             // Update variance
             Variance = ((Sxx - 2 * trace(Components.T.matmul(Sxz)) + trace(Components.T.matmul(Components).matmul(Szz))) / (double)NumFeatures)
                 .clamp_min(0.0)
-                .to_type(TorchSharp.torch.ScalarType.Float64)
+                .to_type(ScalarType.Float64)
                 .item<double>();
         }
     }

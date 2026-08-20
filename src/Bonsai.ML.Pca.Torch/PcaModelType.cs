@@ -16,7 +16,7 @@ public enum PcaModelType
     ProbabilisticPca,
 
     /// <summary>
-    /// Online Probabilistic PCA model.
+    /// Online Probabilistic PCA model using stochastic EM.
     /// </summary>
     OnlineProbabilisticPca,
 

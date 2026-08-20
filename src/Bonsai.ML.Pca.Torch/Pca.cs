@@ -3,8 +3,6 @@ using System.Xml.Serialization;
 using static TorchSharp.torch;
 using static TorchSharp.torch.linalg;
 
-using Bonsai.ML.Torch;
-
 namespace Bonsai.ML.Pca.Torch;
 
 /// <summary>

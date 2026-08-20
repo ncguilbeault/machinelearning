@@ -2,20 +2,15 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Reactive.Linq;
-using System.Linq.Expressions;
-using System.Collections.Generic;
-using System.Reflection;
 using System.Xml.Serialization;
 using static TorchSharp.torch;
-using Bonsai.Expressions;
-using Bonsai.ML.Torch;
 
 namespace Bonsai.ML.Pca.Torch;
 
 /// <summary>
 /// Provides an abstract base class for PCA models.
 /// </summary>
-public abstract class PcaBaseModel : IScalarTypeProvider
+public abstract class PcaBaseModel
 {
     /// <summary>
     /// Gets the number of features in the fitted data.
