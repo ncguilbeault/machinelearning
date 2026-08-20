@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Reactive.Linq;
 using static TorchSharp.torch;
+using static TorchSharp.torch.linalg;
 
 namespace Bonsai.ML.Torch.LinearAlgebra;
 
@@ -18,6 +19,6 @@ public class EigenvalueDecomposition
     /// </summary>
     public IObservable<EigenvalueDecompositionResult> Process(IObservable<Tensor> source)
     {
-        return source.Select(tensor => new EigenvalueDecompositionResult(linalg.eig(tensor)));
+        return source.Select(tensor => new EigenvalueDecompositionResult(eig(tensor)));
     }
 }
