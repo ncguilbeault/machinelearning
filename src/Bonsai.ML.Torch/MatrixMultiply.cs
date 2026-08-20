@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reactive.Linq;
 using static TorchSharp.torch;
-using static TorchSharp.torch.linalg;
 
-namespace Bonsai.ML.Torch.LinearAlgebra;
+namespace Bonsai.ML.Torch;
 
 /// <summary>
 /// Represents an operator that performs matrix multiplication of 2 or more tensors.
@@ -20,7 +20,7 @@ public class MatrixMultiply
     /// </summary>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor>> source)
     {
-        return source.Select(input =>input.Item1.matmul(input.Item2));
+        return source.Select(input => input.Item1.matmul(input.Item2));
     }
 
     /// <summary>
@@ -28,10 +28,7 @@ public class MatrixMultiply
     /// </summary>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor, Tensor>> source)
     {
-        return source.Select(input =>
-        {
-            return multi_dot([input.Item1, input.Item2, input.Item3]);
-        });
+        return source.Select(input => input.Item1.matmul(input.Item2).matmul(input.Item3));
     }
 
     /// <summary>
@@ -39,10 +36,7 @@ public class MatrixMultiply
     /// </summary>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor, Tensor, Tensor>> source)
     {
-        return source.Select(input =>
-        {
-            return multi_dot([input.Item1, input.Item2, input.Item3, input.Item4]);
-        });
+        return source.Select(input => input.Item1.matmul(input.Item2).matmul(input.Item3).matmul(input.Item4));
     }
 
     /// <summary>
@@ -50,10 +44,7 @@ public class MatrixMultiply
     /// </summary>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor, Tensor, Tensor, Tensor>> source)
     {
-        return source.Select(input =>
-        {
-            return multi_dot([input.Item1, input.Item2, input.Item3, input.Item4, input.Item5]);
-        });
+        return source.Select(input => input.Item1.matmul(input.Item2).matmul(input.Item3).matmul(input.Item4).matmul(input.Item5));
     }
 
     /// <summary>
@@ -61,10 +52,7 @@ public class MatrixMultiply
     /// </summary>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor, Tensor, Tensor, Tensor, Tensor>> source)
     {
-        return source.Select(input =>
-        {
-            return multi_dot([input.Item1, input.Item2, input.Item3, input.Item4, input.Item5, input.Item6]);
-        });
+        return source.Select(input => input.Item1.matmul(input.Item2).matmul(input.Item3).matmul(input.Item4).matmul(input.Item5).matmul(input.Item6));
     }
 
     /// <summary>
@@ -72,26 +60,7 @@ public class MatrixMultiply
     /// </summary>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor, Tensor, Tensor, Tensor, Tensor, Tensor>> source)
     {
-        return source.Select(input =>
-        {
-            return multi_dot([input.Item1, input.Item2, input.Item3, input.Item4, input.Item5, input.Item6, input.Item7]);
-        });
-    }
-
-    /// <summary>
-    /// Performs matrix multiplication of an array of tensors.
-    /// </summary>
-    public IObservable<Tensor> Process(IObservable<Tensor[]> source)
-    {
-        return source.Select(multi_dot);
-    }
-
-    /// <summary>
-    /// Performs matrix multiplication of a list of tensors.
-    /// </summary>
-    public IObservable<Tensor> Process(IObservable<IList<Tensor>> source)
-    {
-        return source.Select(multi_dot);
+        return source.Select(input => input.Item1.matmul(input.Item2).matmul(input.Item3).matmul(input.Item4).matmul(input.Item5).matmul(input.Item6).matmul(input.Item7));
     }
 
     /// <summary>
@@ -99,6 +68,14 @@ public class MatrixMultiply
     /// </summary>
     public IObservable<Tensor> Process(IObservable<IEnumerable<Tensor>> source)
     {
-        return source.Select(input => multi_dot([.. input]));
+        return source.Select(input =>
+        {
+            var result = input.FirstOrDefault();
+            foreach (var tensor in input.Skip(1))
+            {
+                result = result.matmul(tensor);
+            }
+            return result;
+        });
     }
 }
