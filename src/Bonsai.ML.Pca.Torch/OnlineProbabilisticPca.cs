@@ -23,14 +23,12 @@ public class OnlineProbabilisticPca : PcaBaseModel
     /// Gets the mean of the fitted data.
     /// </summary>
     [XmlIgnore]
-    [Browsable(false)]
     public Tensor Means { get; private set; } = empty(0);
 
     /// <summary>
     /// Gets the variance of the isotropic Gaussian noise model.
     /// </summary>
     [XmlIgnore]
-    [Browsable(false)]
     public double Variance { get; private set; }
 
     /// <summary>

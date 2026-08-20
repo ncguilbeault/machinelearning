@@ -17,21 +17,18 @@ public class ProbabilisticPca : PcaBaseModel
     /// Gets the mean of the fitted data.
     /// </summary>
     [XmlIgnore]
-    [Browsable(false)]
     public Tensor Mean { get; private set; } = empty(0);
 
     /// <summary>
     /// Gets the variance of the isotropic Gaussian noise model.
     /// </summary>
     [XmlIgnore]
-    [Browsable(false)]
     public double Variance { get; private set; }
 
     /// <summary>
     /// Gets the log likelihood of the fitted model.
     /// </summary>
     [XmlIgnore]
-    [Browsable(false)]
     public Tensor LogLikelihood { get; private set; } = empty(0);
 
     /// <summary>

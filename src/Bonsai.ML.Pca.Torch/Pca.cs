@@ -14,14 +14,12 @@ public class Pca : PcaBaseModel
     /// Gets the mean of the fitted data.
     /// </summary>
     [XmlIgnore]
-    [Browsable(false)]
     public Tensor Mean { get; private set; } = empty(0);
 
     /// <summary>
     /// Gets the singular values of the fitted data.
     /// </summary>
     [XmlIgnore]
-    [Browsable(false)]
     public Tensor SingularValues { get; private set; } = empty(0);
 
     /// <inheritdoc/>

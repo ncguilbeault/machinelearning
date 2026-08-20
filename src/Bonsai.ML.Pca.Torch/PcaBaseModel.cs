@@ -16,12 +16,10 @@ public abstract class PcaBaseModel
     /// Gets the number of features in the fitted data.
     /// </summary>
     [XmlIgnore]
-    [Browsable(false)]
     public int NumFeatures { get; protected set; } = -1;
 
     /// <inheritdoc/>
     [XmlIgnore]
-    [Browsable(false)]
     public Tensor Components { get; protected set; } = empty(0);
 
     /// <summary>

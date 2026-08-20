@@ -13,14 +13,12 @@ public class OnlinePcaGha : PcaBaseModel
     /// Gets the number of samples that have been used to fit the model.
     /// </summary>
     [XmlIgnore]
-    [Browsable(false)]
     public int SampleCount { get; private set; } = 0;
 
     /// <summary>
     /// Gets the mean of the fitted data.
     /// </summary>
     [XmlIgnore]
-    [Browsable(false)]
     public Tensor Mean { get; private set; } = empty(0);
 
     /// <summary>

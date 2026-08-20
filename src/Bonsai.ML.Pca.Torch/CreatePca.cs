@@ -79,7 +79,9 @@ public class CreatePca : ZeroArgumentExpressionBuilder, INamedElement, ICustomTy
     PropertyDescriptorCollection ICustomTypeDescriptor.GetProperties(Attribute[]? attributes)
     {
         var properties = TypeDescriptor.GetProperties(this, attributes, true).Cast<PropertyDescriptor>();
-        var modelProperties = TypeDescriptor.GetProperties(Model, attributes).Cast<PropertyDescriptor>();
+        var modelProperties = TypeDescriptor.GetProperties(Model, attributes)
+            .Cast<PropertyDescriptor>()
+            .Where(descriptor => !descriptor.IsReadOnly);
         return new PropertyDescriptorCollection(properties.Concat(modelProperties).ToArray());
     }
 
