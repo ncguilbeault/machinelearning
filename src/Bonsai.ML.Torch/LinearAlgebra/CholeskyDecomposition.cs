@@ -17,8 +17,6 @@ public class CholeskyDecomposition
     /// <summary>
     /// Computes the Cholesky decomposition of a complex Hermitian or real symmetric positive-definite matrix.
     /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
     public IObservable<Tensor> Process(IObservable<Tensor> source)
     {
         return source.Select(linalg.cholesky);

@@ -18,8 +18,6 @@ public class MatrixMultiply
     /// <summary>
     /// Performs matrix multiplication of 2 tensors.
     /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor>> source)
     {
         return source.Select(input =>input.Item1.matmul(input.Item2));
@@ -28,8 +26,6 @@ public class MatrixMultiply
     /// <summary>
     /// Performs matrix multiplication of 3 tensors.
     /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor, Tensor>> source)
     {
         return source.Select(input =>
@@ -41,8 +37,6 @@ public class MatrixMultiply
     /// <summary>
     /// Performs matrix multiplication of 4 tensors.
     /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor, Tensor, Tensor>> source)
     {
         return source.Select(input =>
@@ -54,8 +48,6 @@ public class MatrixMultiply
     /// <summary>
     /// Performs matrix multiplication of 5 tensors.
     /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor, Tensor, Tensor, Tensor>> source)
     {
         return source.Select(input =>
@@ -67,8 +59,6 @@ public class MatrixMultiply
     /// <summary>
     /// Performs matrix multiplication of 6 tensors.
     /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor, Tensor, Tensor, Tensor, Tensor>> source)
     {
         return source.Select(input =>
@@ -80,8 +70,6 @@ public class MatrixMultiply
     /// <summary>
     /// Performs matrix multiplication of 7 tensors.
     /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor, Tensor, Tensor, Tensor, Tensor, Tensor>> source)
     {
         return source.Select(input =>
@@ -93,8 +81,6 @@ public class MatrixMultiply
     /// <summary>
     /// Performs matrix multiplication of an array of tensors.
     /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
     public IObservable<Tensor> Process(IObservable<Tensor[]> source)
     {
         return source.Select(multi_dot);
@@ -103,8 +89,6 @@ public class MatrixMultiply
     /// <summary>
     /// Performs matrix multiplication of a list of tensors.
     /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
     public IObservable<Tensor> Process(IObservable<IList<Tensor>> source)
     {
         return source.Select(multi_dot);
@@ -113,8 +97,6 @@ public class MatrixMultiply
     /// <summary>
     /// Performs matrix multiplication of an enumerable of tensors.
     /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
     public IObservable<Tensor> Process(IObservable<IEnumerable<Tensor>> source)
     {
         return source.Select(input => multi_dot([.. input]));

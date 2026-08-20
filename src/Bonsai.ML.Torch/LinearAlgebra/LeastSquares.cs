@@ -18,8 +18,6 @@ public class LeastSquares
     /// Computes the solution to the least squares and least norm problems for a full rank matrix A of size m*n and a
     /// matrix B of size m*k.
     /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
     public IObservable<LeastSquaresResult> Process(IObservable<Tuple<Tensor, Tensor>> source)
     {
         return source.Select(value => new LeastSquaresResult(linalg.lstsq(value.Item1, value.Item2)));

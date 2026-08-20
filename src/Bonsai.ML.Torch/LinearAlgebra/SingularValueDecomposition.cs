@@ -22,8 +22,6 @@ public class SingularValueDecomposition
     /// <summary>
     /// Computes the singular value decomposition (SVD) of a matrix.
     /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
     public IObservable<SingularValueDecompositionResult> Process(IObservable<Tensor> source)
     {
         return source.Select(tensor => new SingularValueDecompositionResult(linalg.svd(tensor, fullMatrices: FullMatrices)));

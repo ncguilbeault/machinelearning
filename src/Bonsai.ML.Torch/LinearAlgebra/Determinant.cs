@@ -16,8 +16,6 @@ public class Determinant
     /// <summary>
     /// Computes the determinant of a square matrix.
     /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
     public IObservable<Tensor> Process(IObservable<Tensor> source)
     {
         return source.Select(linalg.det);

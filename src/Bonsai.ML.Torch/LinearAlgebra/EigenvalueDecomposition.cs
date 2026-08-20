@@ -16,8 +16,6 @@ public class EigenvalueDecomposition
     /// <summary>
     /// Computes the eigenvalue decomposition of a square matrix if it exists.
     /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
     public IObservable<EigenvalueDecompositionResult> Process(IObservable<Tensor> source)
     {
         return source.Select(tensor => new EigenvalueDecompositionResult(linalg.eig(tensor)));

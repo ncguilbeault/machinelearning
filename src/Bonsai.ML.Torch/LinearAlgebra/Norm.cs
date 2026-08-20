@@ -29,8 +29,6 @@ public class Norm
     /// <summary>
     /// Computes a matrix norm.
     /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
     public IObservable<Tensor> Process(IObservable<Tensor> source)
     {
         return source.Select(tensor => linalg.norm(tensor, dims: Dimensions, keepdim: Keepdim));

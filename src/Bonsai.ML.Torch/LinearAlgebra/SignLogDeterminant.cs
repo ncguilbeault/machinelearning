@@ -17,8 +17,6 @@ public class SignLogDeterminant
     /// <summary>
     /// Computes the sign and natural logarithm of the absolute value of the determinant of a square matrix.
     /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
     public IObservable<SignLogDeterminantResult> Process(IObservable<Tensor> source)
     {
         return source.Select(result => new SignLogDeterminantResult(linalg.slogdet(result)));

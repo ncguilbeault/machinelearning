@@ -35,8 +35,6 @@ public class MatrixRank
     /// <summary>
     /// Computes the numerical rank of a matrix.
     /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
     public IObservable<Tensor> Process(IObservable<Tensor> source)
     {
         return source.Select(input => matrix_rank(input, atol: AbsoluteTolerance, rtol: RelativeTolerance, hermitian: Hermitian));

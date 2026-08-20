@@ -5,7 +5,6 @@ namespace Bonsai.ML.Torch.LinearAlgebra;
 /// <summary>
 /// Represents the result of solving of linear equations using the least squares method.
 /// </summary>
-/// <param name="result"></param>
 public readonly struct LeastSquaresResult((
     Tensor solution,
     Tensor residuals,

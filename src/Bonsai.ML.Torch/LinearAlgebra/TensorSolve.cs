@@ -24,8 +24,6 @@ public class TensorSolve
     /// <summary>
     /// Computes the solution to the system tensordot(A, X) = B.
     /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor>> source)
     {
         return source.Select(value =>

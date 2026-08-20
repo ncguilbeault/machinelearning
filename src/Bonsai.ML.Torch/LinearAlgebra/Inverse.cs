@@ -17,8 +17,6 @@ public class Inverse
     /// <summary>
     /// Computes the inverse of the input matrix.
     /// </summary>
-    /// <param name="source">The input matrix to invert.</param>
-    /// <returns>The inverse of the input matrix.</returns>
     public IObservable<Tensor> Process(IObservable<Tensor> source)
     {
         return source.Select(inv);

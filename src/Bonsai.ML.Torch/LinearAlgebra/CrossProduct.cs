@@ -23,8 +23,6 @@ public class CrossProduct
     /// <summary>
     /// Computes the cross product of 2 tensors.
     /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor>> source)
     {
         return source.Select(value =>

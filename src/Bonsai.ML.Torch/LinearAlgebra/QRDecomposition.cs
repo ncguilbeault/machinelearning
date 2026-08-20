@@ -23,8 +23,6 @@ public class QRDecomposition
     /// <summary>
     /// Computes the QR decomposition of a matrix.
     /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
     public IObservable<QRDecompositionResult> Process(IObservable<Tensor> source)
     {
         return source.Select(tensor => new QRDecompositionResult(qr(tensor, mode: Mode)));

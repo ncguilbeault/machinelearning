@@ -35,8 +35,6 @@ public class SolveTriangular
     /// <summary>
     /// Computes the solution to a triangular system of linear equations for each pair of input tensors.
     /// </summary>
-    /// <param name="source"></param>
-    /// <returns></returns>
     public IObservable<Tensor> Process(IObservable<Tuple<Tensor, Tensor>> source)
     {
         return source.Select(value =>
