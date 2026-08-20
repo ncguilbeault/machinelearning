@@ -15,21 +15,21 @@ namespace Bonsai.ML.Torch.LinearAlgebra;
 public class SolveTriangular
 {
     /// <summary>
-    /// Gets or sets a value indicating whether the first matrix is upper triangular.
+    /// Gets or sets whether the first matrix is upper triangular.
     /// </summary>
-    [Description("Indicates whether the first matrix is upper triangular.")]
+    [Description("Whether the first matrix is upper triangular.")]
     public bool Upper { get; set; } = true;
 
     /// <summary>
-    /// Gets or sets a value indicating whether to solve the system with the first matrix on the left or right (AX = B or XA = B).
+    /// Gets or sets whether to solve the system with the first matrix on the left or right (AX = B or XA = B).
     /// </summary>
-    [Description("Indicates whether to solve the system with the first matrix on the left or right (AX = B or XA = B).")]
+    [Description("Whether to solve the system with the first matrix on the left or right (AX = B or XA = B).")]
     public bool Left { get; set; } = true;
 
     /// <summary>
-    /// Gets or sets a value indicating whether the first matrix has a unit diagonal, i.e., all diagonal elements are assumed to be 1.
+    /// Gets or sets whether the first matrix has a unit diagonal, i.e., all diagonal elements are assumed to be 1.
     /// </summary>
-    [Description("Indicates whether the first matrix has a unit diagonal, i.e., all diagonal elements are assumed to be 1.")]
+    [Description("Whether the first matrix has a unit diagonal, i.e., all diagonal elements are assumed to be 1.")]
     public bool UnitDiagonal { get; set; } = false;
 
     /// <summary>

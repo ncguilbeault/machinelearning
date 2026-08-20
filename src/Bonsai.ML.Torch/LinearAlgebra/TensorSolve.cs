@@ -15,10 +15,10 @@ namespace Bonsai.ML.Torch.LinearAlgebra;
 public class TensorSolve
 {
     /// <summary>
-    /// The dimensions to perform the operation.
+    /// Gets or sets the dimensions along which to perform the operation.
     /// </summary>
     [TypeConverter(typeof(UnidimensionalArrayConverter))]
-    [Description("The dimensions to perform the operation.")]
+    [Description("The dimensions along which to perform the operation.")]
     public long[] Dimensions { get; set; } = [];
 
     /// <summary>

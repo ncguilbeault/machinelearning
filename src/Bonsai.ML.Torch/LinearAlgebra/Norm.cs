@@ -14,16 +14,16 @@ namespace Bonsai.ML.Torch.LinearAlgebra;
 public class Norm
 {
     /// <summary>
-    /// The dimensions along which to compute the norm.
+    /// Gets or sets the dimensions along which to compute the norm.
     /// </summary>
     [TypeConverter(typeof(UnidimensionalArrayConverter))]
     [Description("The dimensions along which to compute the norm.")]
     public long[] Dimensions { get; set; } = null;
 
     /// <summary>
-    /// If true, the reduced dimensions are retained in the result as dimensions with size one.
+    /// Gets or sets whether the reduced dimensions are retained in the result as dimensions with size one.
     /// </summary>
-    [Description("If true, the reduced dimensions are retained in the result as dimensions with size one.")]
+    [Description("Whether the reduced dimensions are retained in the result as dimensions with size one.")]
     public bool Keepdim { get; set; } = false;
 
     /// <summary>

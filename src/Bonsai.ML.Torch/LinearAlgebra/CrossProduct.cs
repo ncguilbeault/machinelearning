@@ -15,8 +15,9 @@ namespace Bonsai.ML.Torch.LinearAlgebra;
 public class CrossProduct
 {
     /// <summary>
-    /// The dimension to perform the operation.
+    /// Gets or sets the dimension along which to perform the operation.
     /// </summary>
+    [Description("The dimension along which to perform the operation.")]
     public long Dimension { get; set; } = -1;
 
     /// <summary>

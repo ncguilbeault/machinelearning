@@ -14,7 +14,7 @@ namespace Bonsai.ML.Torch.LinearAlgebra;
 public class SingularValueDecomposition
 {
     /// <summary>
-    /// Whether to compute the full or reduced SVD.
+    /// Gets or sets whether to compute the full or reduced SVD.
     /// </summary>
     [Description("Whether to compute the full or reduced SVD.")]
     public bool FullMatrices { get; set; } = false;
